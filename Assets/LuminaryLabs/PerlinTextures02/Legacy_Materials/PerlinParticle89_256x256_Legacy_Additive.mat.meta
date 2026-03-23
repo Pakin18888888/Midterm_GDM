@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 96dd6e12109d5bc48a2602179f7570e7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 307522
+  packageName: 50 Perlin Particle Textures Part 2
+  packageVersion: 1.0
+  assetPath: Assets/LuminaryLabs/PerlinTextures02/Legacy_Materials/PerlinParticle89_256x256_Legacy_Additive.mat
+  uploadId: 722797

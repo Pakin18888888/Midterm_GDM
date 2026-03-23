@@ -7,6 +7,12 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private GameObject pushProjectilePrefab;
 
     private float lastAttackTime;
+    private PlayerMovement playerMovement;
+
+    private void Awake()
+    {
+        playerMovement = GetComponent<PlayerMovement>();
+    }
 
     public void TryAttack()
     {
@@ -22,7 +28,11 @@ public class PlayerAttack : MonoBehaviour
         if (projectile != null)
         {
             int damage = (config != null) ? config.playerDamage : 1;
-            projectile.Setup(damage, transform.right, transform.position);
+            MagnetPolarity polarity = playerMovement != null
+                ? playerMovement.GetPolarity()
+                : MagnetPolarity.Positive;
+
+            projectile.Setup(damage, transform.right, transform.position, polarity, config);
         }
     }
 }

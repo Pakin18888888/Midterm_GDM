@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: CombatConfig
   m_EditorClassIdentifier: Assembly-CSharp::CombatConfig
   playerMaxHP: 10
-  enemyMaxHP: 3
+  enemyMaxHP: 1
   playerDamage: 1
   playerAttackCooldown: 0.5
   attackRadius: 0.5
-  detectionRange: 5
-  attackRange: 2
+  detectionRange: 7
+  attackRange: 7
   patrolSpeed: 2
   chaseSpeed: 3
   enemyDamage: 1

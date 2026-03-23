@@ -115,20 +115,12 @@ public class PlayerLife : MonoBehaviour, IDamageable
         Vector2 dir = (Vector2)transform.position - fromPosition;
         knockback?.Apply(dir);
 
+        playerController?.PlayHit();
+
         if (currentHP <= 0)
         {
             Kill();
             return;
-        }
-
-        if (anim != null)
-        {
-            anim.SetBool("isHit", true);
-
-            if (_coHitReset != null)
-                StopCoroutine(_coHitReset);
-
-            _coHitReset = StartCoroutine(ResetHitAnim());
         }
 
         if (invincibleTime > 0f)
