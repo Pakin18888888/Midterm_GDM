@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
@@ -9,16 +10,14 @@ public class PlayerMovement : MonoBehaviour
     [Header("Auto Run")]
     [SerializeField] private float runSpeed = 5f;
     [SerializeField] private bool gameStarted = false;
+    [SerializeField] private float jumpAnimDuration = 0.15f;
 
     private Rigidbody2D rb;
     private Animator anim;
-    private PlayerInput playerInput;
     private PlayerAttack playerAttack;
 
-    private InputAction jumpAction;
-    private InputAction attackAction;
-
     private bool canControl = true;
+    private Coroutine jumpRoutine;
 
     private static readonly int IsJumpHash = Animator.StringToHash("isJump");
     private static readonly int IsHitHash = Animator.StringToHash("isHit");
@@ -30,29 +29,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        playerInput = GetComponent<PlayerInput>();
         playerAttack = GetComponent<PlayerAttack>();
-
-        jumpAction = playerInput.actions["Jump"];
-        attackAction = playerInput.actions["Attack"];
-    }
-
-    private void OnEnable()
-    {
-        if (jumpAction != null)
-            jumpAction.performed += OnJump;
-
-        if (attackAction != null)
-            attackAction.performed += OnAttack;
-    }
-
-    private void OnDisable()
-    {
-        if (jumpAction != null)
-            jumpAction.performed -= OnJump;
-
-        if (attackAction != null)
-            attackAction.performed -= OnAttack;
     }
 
     private void FixedUpdate()
@@ -72,21 +49,28 @@ public class PlayerMovement : MonoBehaviour
         anim.SetTrigger(StartRunHash);
     }
 
-    private void OnJump(InputAction.CallbackContext ctx)
+    public void OnJump()
     {
         if (!canControl || !gameStarted) return;
 
         anim.SetBool(IsJumpHash, true);
 
-        // ตรงนี้ค่อยใส่ logic กระโดดจริง หรือสลับแรงแม่เหล็กเพิ่มทีหลัง
+        if (jumpRoutine != null)
+            StopCoroutine(jumpRoutine);
+
+        jumpRoutine = StartCoroutine(EndJumpAfterDelay(jumpAnimDuration));
+
+        // ตรงนี้ค่อยใส่ logic เด้งขึ้น / สลับขั้ว ทีหลัง
     }
 
-    public void EndJump()
+    private IEnumerator EndJumpAfterDelay(float delay)
     {
+        yield return new WaitForSeconds(delay);
         anim.SetBool(IsJumpHash, false);
+        jumpRoutine = null;
     }
 
-    private void OnAttack(InputAction.CallbackContext ctx)
+    public void OnAttack()
     {
         if (!canControl || !gameStarted) return;
 

@@ -124,7 +124,7 @@ public partial class @PlayerCon: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""26ecf669-a02c-46a2-9dfd-96325cc591a6"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
