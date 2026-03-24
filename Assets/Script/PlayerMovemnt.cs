@@ -87,6 +87,7 @@ public class PlayerMovement : MonoBehaviour
         if (topLane == null || bottomLane == null) return;
 
         AudioManager.I?.PlayPlayerJump();
+        AudioManager.I?.StopRunLoop();
 
         if (switchRoutine != null)
             StopCoroutine(switchRoutine);
@@ -152,6 +153,12 @@ public class PlayerMovement : MonoBehaviour
 
         anim.SetBool(IsJumpHash, false);
         isSwitching = false;
+
+        // 🔵 กลับมาเล่นเสียงวิ่ง
+        if (canControl && gameStarted && !isStunned)
+        {
+            AudioManager.I?.StartRunLoop();
+        }
         switchRoutine = null;
     }
 
@@ -267,10 +274,19 @@ public class PlayerMovement : MonoBehaviour
         anim.SetBool(IsHitHash, true);
         rb.linearVelocity = Vector2.zero;
 
+        AudioManager.I?.StopRunLoop(); // 🔴 หยุดเสียงวิ่ง
+
         yield return new WaitForSeconds(hitStunDuration);
 
         anim.SetBool(IsHitHash, false);
         isStunned = false;
+
+        // 🔵 กลับมาเล่นเสียงวิ่ง
+        if (canControl && gameStarted)
+        {
+            AudioManager.I?.StartRunLoop();
+        }
+
         hitRoutine = null;
     }
 
