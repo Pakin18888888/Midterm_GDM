@@ -13,6 +13,9 @@ public class EnemyShooter : MonoBehaviour
     [SerializeField] private Animator anim;
     [SerializeField] private string attackTriggerName = "attack";
     [SerializeField] private float shootDelay = 0.1f;
+    [SerializeField] private float laneTolerance = 1.0f;
+    [SerializeField] private EnemyLane enemyLane;
+    [SerializeField] private PlayerMovement playerMovement;
 
     private float lastFireTime;
     private bool shooting;
@@ -26,6 +29,12 @@ public class EnemyShooter : MonoBehaviour
             GameObject p = GameObject.FindGameObjectWithTag("Player");
             if (p != null) player = p.transform;
         }
+
+        if (playerMovement == null)
+            playerMovement = FindFirstObjectByType<PlayerMovement>();
+
+        if (enemyLane == null)
+            enemyLane = GetComponent<EnemyLane>();
 
         if (anim == null)
             anim = GetComponent<Animator>();
@@ -43,15 +52,14 @@ public class EnemyShooter : MonoBehaviour
 
     public bool IsPlayerInAttackRange()
     {
-        if (player == null) return false;
+        if (player == null || playerMovement == null || enemyLane == null) return false;
 
         float range = (config != null) ? config.attackRange : 2f;
-
-        // เช็กเฉพาะระยะ X
         float dx = transform.position.x - player.position.x;
 
-        // player ต้องอยู่ทางซ้ายของ enemy และห่างไม่เกิน range
-        return dx >= 0f && dx <= range;
+        bool sameLane = playerMovement.IsOnTopLane() == enemyLane.IsTopLane;
+
+        return sameLane && dx >= 0f && dx <= range;
     }
 
     private void TryShoot()
@@ -65,12 +73,14 @@ public class EnemyShooter : MonoBehaviour
 
     private IEnumerator CoShoot()
     {
+        
         shooting = true;
 
         if (anim != null && !string.IsNullOrEmpty(attackTriggerName))
             anim.SetTrigger(attackTriggerName);
 
         yield return new WaitForSeconds(shootDelay);
+        AudioManager.I?.PlayEnemyShoot();
 
         GameObject obj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
 

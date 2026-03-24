@@ -1,5 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+using UnityEngine;
+using System.Collections;
+using Unity.Cinemachine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,17 +14,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private HUDController hud;
     [SerializeField] private PlayerLife player;
     [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private EnemySpawner enemySpawner;
 
     [Header("Rules")]
     [SerializeField] private int coinsToWin = 5;
 
-    [Header("Respawn")]
-    [SerializeField] private float respawnDelay = 0.6f;
-    [SerializeField] private float postRespawnInvincible = 1.0f;
-
     public GameState State { get; private set; } = GameState.Playing;
     public int Coins { get; private set; } = 0;
-    public Vector3 RespawnPoint { get; private set; }
+    [Header("Cameras")]
+    [SerializeField] private CinemachineCamera playerCamera;
+    [SerializeField] private CinemachineCamera goalCamera;
+    [SerializeField] private float introLookTime = 2.5f;
 
     private void Awake()
     {
@@ -35,15 +40,14 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         State = GameState.Playing;
-
-        if (player != null)
-            RespawnPoint = player.transform.position;
+        AudioManager.I?.PlayBGM();
 
         if (playerMovement == null && player != null)
             playerMovement = player.GetComponent<PlayerMovement>();
 
         hud?.SetCoins(Coins, coinsToWin);
         hud?.ClearMessage();
+        hud?.HideRestartButton();
 
         StartCoroutine(CoStartGame());
     }
@@ -53,31 +57,44 @@ public class GameManager : MonoBehaviour
         if (player != null)
             player.SetControlEnabled(false);
 
+        // เริ่มที่กล้องเส้นชัย
+        if (goalCamera != null) goalCamera.Priority = 20;
+        if (playerCamera != null) playerCamera.Priority = 10;
+
+        yield return new WaitForSeconds(introLookTime);
+
+        // กลับมาที่กล้องผู้เล่น
+        if (goalCamera != null) goalCamera.Priority = 9;
+        if (playerCamera != null) playerCamera.Priority = 10;
+
+        yield return new WaitForSeconds(0.5f);
+
         hud?.ShowMessage("3", false);
+        AudioManager.I?.PlayCountdown();
         yield return new WaitForSeconds(1f);
 
         hud?.ShowMessage("2", false);
+        AudioManager.I?.PlayCountdown();
         yield return new WaitForSeconds(1f);
 
         hud?.ShowMessage("1", false);
+        AudioManager.I?.PlayCountdown();
         yield return new WaitForSeconds(1f);
 
         hud?.ShowMessage("GO!", true);
+        AudioManager.I?.PlayGo();
 
         if (player != null)
             player.SetControlEnabled(true);
 
         if (playerMovement != null)
             playerMovement.StartRun();
+
+        if (enemySpawner != null)
+            enemySpawner.StartSpawning();
     }
 
     public bool IsPlaying => State == GameState.Playing;
-
-    public void RegisterCheckpoint(Vector3 p)
-    {
-        RespawnPoint = p;
-        Debug.Log($"Respawn point: {p}");
-    }
 
     public void AddCoin(int amount)
     {
@@ -96,45 +113,37 @@ public class GameManager : MonoBehaviour
 
         State = GameState.Win;
         hud?.ShowWin();
+        AudioManager.I?.StopRunLoop();
+        AudioManager.I?.FadeOutBGM();
+        AudioManager.I?.PlayWin();
 
         if (player != null)
             player.SetControlEnabled(false);
+
+        if (playerMovement != null)
+            playerMovement.PlayWinIdleOnBottomLane();
     }
 
     public void PlayerDied()
     {
         if (!IsPlaying) return;
 
-        State = GameState.Dead;
-        hud?.ShowDead();
+        State = GameState.GameOver;
+        hud?.ShowGameOver();
+        AudioManager.I?.StopRunLoop();
+        AudioManager.I?.FadeOutBGM();
+        AudioManager.I?.PlayGameOver();
 
         if (player != null)
         {
             player.SetControlEnabled(false);
             player.StopMotion();
         }
-
-        StartCoroutine(CoRespawn());
     }
 
-    private IEnumerator CoRespawn()
+    public void RestartGame()
     {
-        yield return new WaitForSeconds(respawnDelay);
-
-        if (player != null)
-        {
-            player.TeleportTo(RespawnPoint);
-            player.StopMotion();
-            player.ResetHP();
-            player.SetControlEnabled(true);
-            player.SetInvincible(postRespawnInvincible);
-        }
-
-        if (playerMovement != null)
-            playerMovement.StartRun();
-
-        if (State != GameState.Win)
-            State = GameState.Playing;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void SetPlayerControl(bool enable)
@@ -146,5 +155,10 @@ public class GameManager : MonoBehaviour
             if (!enable)
                 player.StopMotion();
         }
+    }
+
+    public void ShowMessage(string msg, bool autoHide)
+    {
+        hud?.ShowMessage(msg, autoHide);
     }
 }

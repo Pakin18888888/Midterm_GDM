@@ -6,6 +6,27 @@ public class CollectibleCoin : MonoBehaviour
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private AudioClip collectSound;
     [SerializeField] private float volume = 1f;
+    [SerializeField] private float moveSpeed = 6f;
+    private Transform player;
+    private bool isCollected = false;
+
+    void Start()
+    {
+        GameObject p = GameObject.FindGameObjectWithTag(playerTag);
+        if (p != null) player = p.transform;
+    }
+
+    void Update()
+    {
+        if (isCollected && player != null)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                player.position,
+                moveSpeed * Time.deltaTime
+            );
+        }
+    }
 
     void Reset()
     {
@@ -18,11 +39,14 @@ public class CollectibleCoin : MonoBehaviour
     {
         if (!other.CompareTag(playerTag)) return;
 
+        isCollected = true;
+
         GameManager.I?.AddCoin(value);
+        GameManager.I?.ShowMessage("+1", true);
 
         if (collectSound != null)
             AudioSource.PlayClipAtPoint(collectSound, transform.position, volume);
 
-        gameObject.SetActive(false);
+        Destroy(gameObject, 0.1f);
     }
 }

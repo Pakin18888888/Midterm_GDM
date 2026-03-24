@@ -68,8 +68,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.00020003319, y: 0, z: 0}
-    m_Extent: {x: 1.1867, y: 1.1869, z: 0}
+    m_Center: {x: 0.00020000339, y: -0.00014999509, z: 0}
+    m_Extent: {x: 0.6194, y: 0.61965, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -77,7 +77,7 @@ MonoBehaviour:
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
-  m_ShapeLightFalloffSize: 0.69
+  m_ShapeLightFalloffSize: 0.12
   m_ShapeLightFalloffOffset: {x: 0, y: 0}
   m_ShapePath:
   - {x: 0.5, y: 0, z: 0}
@@ -284,7 +284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PushProjectile
   speed: 12
   lifeTime: 1.5
-  pushForce: 8
+  defaultPushForce: 8
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128

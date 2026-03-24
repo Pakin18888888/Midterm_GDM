@@ -7,8 +7,13 @@ public class EnemyLife : MonoBehaviour, IDamageable
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private float knockbackForce = 6f;
 
+    [Header("Drop")]
+    [SerializeField] private GameObject dropItemPrefab;
+    [SerializeField] private int dropCount = 1;
+
     [Header("Runtime")]
     [SerializeField] private int currentHP;
+    
 
     private EnemyPolarity enemyPolarity;
 
@@ -45,6 +50,18 @@ public class EnemyLife : MonoBehaviour, IDamageable
 
     private void Die()
     {
+        DropItems();
         Destroy(gameObject);
+    }
+
+    private void DropItems()
+    {
+        if (dropItemPrefab == null) return;
+
+        for (int i = 0; i < dropCount; i++)
+        {
+            Vector3 spawnPos = transform.position + new Vector3(i * 0.2f, 0f, 0f);
+            Instantiate(dropItemPrefab, spawnPos, Quaternion.identity);
+        }
     }
 }

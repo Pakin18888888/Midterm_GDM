@@ -1,6 +1,6 @@
 public enum GameState
 {
     Playing,
-    Dead,  
+    GameOver,
     Win
 }

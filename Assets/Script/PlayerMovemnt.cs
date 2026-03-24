@@ -77,6 +77,7 @@ public class PlayerMovement : MonoBehaviour
     {
         gameStarted = true;
         anim.SetTrigger(StartRunHash);
+        AudioManager.I?.StartRunLoop();
     }
 
     public void OnJump()
@@ -84,6 +85,8 @@ public class PlayerMovement : MonoBehaviour
         if (!canControl || !gameStarted) return;
         if (isSwitching) return;
         if (topLane == null || bottomLane == null) return;
+
+        AudioManager.I?.PlayPlayerJump();
 
         if (switchRoutine != null)
             StopCoroutine(switchRoutine);
@@ -192,11 +195,10 @@ public class PlayerMovement : MonoBehaviour
             : MagnetPolarity.Positive;
 
         ApplyPolarityVisual();
-
-        // effect เพิ่ม
         StartCoroutine(FlashEffect());
-    }
 
+        ValidateCurrentLaneAfterPolarityChange();
+    }
     private IEnumerator FlashEffect()
     {
         foreach (var sr in polarityIndicators)
@@ -247,6 +249,7 @@ public class PlayerMovement : MonoBehaviour
         if (!canControl || !gameStarted) return;
 
         anim.SetTrigger(AttackHash);
+        AudioManager.I?.PlayPlayerShoot();
         playerAttack?.TryAttack();
     }
 
@@ -287,6 +290,7 @@ public class PlayerMovement : MonoBehaviour
     {
         canControl = false;
         anim.SetBool(IsDeadHash, true);
+        AudioManager.I?.StopRunLoop();
     }
 
     public void SetControlEnabled(bool enabled)
@@ -294,8 +298,121 @@ public class PlayerMovement : MonoBehaviour
         canControl = enabled;
 
         if (!enabled)
+        {
             rb.linearVelocity = Vector2.zero;
+            AudioManager.I?.StopRunLoop();
+        }
+
     }
 
+    private void ValidateCurrentLaneAfterPolarityChange()
+    {
+        MagnetLane currentLane = isOnTopLane ? topLane : bottomLane;
+        MagnetLane otherLane = isOnTopLane ? bottomLane : topLane;
 
+        if (currentLane == null || otherLane == null) return;
+
+        // ถ้ายังเกาะเลนปัจจุบันได้ ก็ไม่ต้องทำอะไร
+        if (currentLane.CanAttach(polarity))
+            return;
+
+        // ถ้าเกาะเลนเดิมไม่ได้ แต่เกาะอีกเลนได้ -> ย้ายทันที
+        if (otherLane.CanAttach(polarity))
+        {
+            if (switchRoutine != null)
+                StopCoroutine(switchRoutine);
+
+            switchRoutine = StartCoroutine(CoForceSwitchToOtherLane(otherLane));
+        }
+    }
+    private IEnumerator CoForceSwitchToOtherLane(MagnetLane targetLane)
+    {
+        isSwitching = true;
+        anim.SetBool(IsJumpHash, true);
+
+        Vector3 startPos = transform.position;
+        Vector3 targetPos = new Vector3(
+            transform.position.x,
+            targetLane.AttachPoint.position.y,
+            transform.position.z
+        );
+
+        yield return StartCoroutine(CoMoveToPosition(startPos, targetPos, switchDuration));
+
+        isOnTopLane = (targetLane == topLane);
+        SetPlayerUpsideDown(isOnTopLane);
+
+        anim.SetBool(IsJumpHash, false);
+        isSwitching = false;
+        switchRoutine = null;
+    }
+
+    public void PlayIdle()
+    {
+        canControl = false;
+        gameStarted = false;
+        isStunned = false;
+        isSwitching = false;
+
+        if (hitRoutine != null)
+        {
+            StopCoroutine(hitRoutine);
+            hitRoutine = null;
+        }
+
+        if (switchRoutine != null)
+        {
+            StopCoroutine(switchRoutine);
+            switchRoutine = null;
+        }
+
+        rb.linearVelocity = Vector2.zero;
+
+        anim.SetBool(IsJumpHash, false);
+        anim.SetBool(IsHitHash, false);
+        anim.SetBool(IsDeadHash, false);
+
+        anim.Play("Idle");
+    }
+
+    public void PlayWinIdleOnBottomLane()
+    {
+        canControl = false;
+        gameStarted = false;
+        isStunned = false;
+        isSwitching = false;
+
+        if (hitRoutine != null)
+        {
+            StopCoroutine(hitRoutine);
+            hitRoutine = null;
+        }
+
+        if (switchRoutine != null)
+        {
+            StopCoroutine(switchRoutine);
+            switchRoutine = null;
+        }
+
+        rb.linearVelocity = Vector2.zero;
+
+        anim.SetBool(IsJumpHash, false);
+        anim.SetBool(IsHitHash, false);
+        anim.SetBool(IsDeadHash, false);
+
+        // ย้ายลงเลนล่าง
+        if (bottomLane != null && bottomLane.AttachPoint != null)
+        {
+            transform.position = new Vector3(
+                transform.position.x,
+                bottomLane.AttachPoint.position.y,
+                transform.position.z
+            );
+        }
+
+        isOnTopLane = false;
+        SetPlayerUpsideDown(false);
+
+        anim.Play("Idle");
+    }
 }

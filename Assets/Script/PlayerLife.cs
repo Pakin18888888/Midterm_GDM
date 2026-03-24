@@ -116,6 +116,7 @@ public class PlayerLife : MonoBehaviour, IDamageable
         knockback?.Apply(dir);
 
         playerController?.PlayHit();
+        AudioManager.I?.PlayPlayerHit();
 
         if (currentHP <= 0)
         {
