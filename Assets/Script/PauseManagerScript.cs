@@ -45,10 +45,10 @@ public class PauseManagerScript : MonoBehaviour
         //     canvas.enabled = !canvas.enabled;
         //     OnPausePerformed();
         // }
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            QuitGame();
-        }
+        // if (Input.GetKeyDown(KeyCode.Q))
+        // {
+        //     QuitGame();
+        // }
     }
 
     public void QuitGame()
