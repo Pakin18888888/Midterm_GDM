@@ -6247,6 +6247,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3199234433168532604, guid: 4c09aa47d6e0e954f899cb8efe5a6816, type: 3}
   m_PrefabInstance: {fileID: 304148248}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &309846308 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4257508509235537429, guid: 4cd6608e083e919469bc575d3520cb8f, type: 3}
+  m_PrefabInstance: {fileID: 1894352082}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &348997140
 GameObject:
   m_ObjectHideFlags: 0
@@ -6803,7 +6808,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FinishLine
   playerTag: Player
   triggerOnce: 1
-  moveDownDelay: 0.25
 --- !u!61 &421421933
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10114,7 +10118,6 @@ MonoBehaviour:
   topSpawnPoint: {fileID: 358810233}
   bottomSpawnPoint: {fileID: 1212814316}
   startSpawnCount: 10
-  maxAliveEnemies: 10
   spawnIntervalMin: 1
   spawnIntervalMax: 1.5
   minSpawnXDistance: 4.5
@@ -10261,7 +10264,6 @@ GameObject:
   - component: {fileID: 1225062462}
   - component: {fileID: 1225062461}
   - component: {fileID: 1225062465}
-  - component: {fileID: 1225062466}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -10477,8 +10479,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   sfxSource: {fileID: 1225062462}
   loopSource: {fileID: 1225062461}
-  bgmSource: {fileID: 1225062465}
-  pauseBgmSource: {fileID: 1225062466}
   countdownClip: {fileID: 8300000, guid: cab7ea4aaa805364999a1ee9a4955fc8, type: 3}
   goClip: {fileID: 0}
   runLoopClip: {fileID: 8300000, guid: 7b126e74ef948e5488ddbf2020b784c6, type: 3}
@@ -10488,8 +10488,8 @@ MonoBehaviour:
   enemyShootClip: {fileID: 8300000, guid: 4bb99f9211c5400419dccdf1c4f9a33f, type: 3}
   gameOverClip: {fileID: 8300000, guid: bf9285567089fe5478f7f583e995ecfe, type: 3}
   winClip: {fileID: 8300000, guid: 18caa25d2d643e549b499cef855a444b, type: 3}
+  bgmSource: {fileID: 1225062465}
   bgmClip: {fileID: 8300000, guid: b010a7c04b61cfc41997f2d7fcff3b02, type: 3}
-  pauseBgmClip: {fileID: 0}
 --- !u!4 &1225062464
 Transform:
   m_ObjectHideFlags: 0
@@ -10519,103 +10519,6 @@ AudioSource:
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 0.6
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!82 &1225062466
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1225062460}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -11334,7 +11237,6 @@ MonoBehaviour:
   player: {fileID: 1894352096}
   enemySpawner: {fileID: 1714949374}
   coinsToWin: 1000
-  cameraIntro: {fileID: 1898098770}
 --- !u!4 &1361097119
 Transform:
   m_ObjectHideFlags: 0
@@ -11459,7 +11361,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -723.6, y: -67}
+  m_AnchoredPosition: {x: -723.6, y: -120.4}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &1423463209
@@ -11499,8 +11401,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278248703
-  m_fontColor: {r: 1, g: 0.8950032, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -11918,7 +11820,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0c49197e3bfcad4887fe4aecdc5d4e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseManagerScript
-  canvas: {fileID: 0}
+  canvas: {fileID: 1439887644}
 --- !u!223 &1439887644
 Canvas:
   m_ObjectHideFlags: 0
@@ -12081,7 +11983,7 @@ GameObject:
   m_Layer: 0
   m_Name: TopLanePoint
   m_TagString: Untagged
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -12094,7 +11996,7 @@ Transform:
   m_GameObject: {fileID: 1546382140}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.45, z: 0}
+  m_LocalPosition: {x: 0, y: 6.68, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12368,7 +12270,6 @@ MonoBehaviour:
   topSpawnPoint: {fileID: 2099251239}
   bottomSpawnPoint: {fileID: 676748393}
   startSpawnCount: 10
-  maxAliveEnemies: 10
   spawnIntervalMin: 1
   spawnIntervalMax: 1.5
   minSpawnXDistance: 4.5
@@ -16007,6 +15908,9 @@ PrefabInstance:
       addedObject: {fileID: 1894352092}
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 4cd6608e083e919469bc575d3520cb8f, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1894352089}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 4cd6608e083e919469bc575d3520cb8f, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1894352088}
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 4cd6608e083e919469bc575d3520cb8f, type: 3}
       insertIndex: -1
@@ -16103,6 +16007,27 @@ MonoBehaviour:
   sr: {fileID: 1894352086}
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.15
+--- !u!114 &1894352089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1894352084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7501f9c27127ff44c8eadcef1316d6f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLife
+  playerRoot: {fileID: 1894352096}
+  rb: {fileID: 1894352092}
+  anim: {fileID: 1894352085}
+  invincibleTime: 0
+  combatConfig: {fileID: 11400000, guid: 4ef4b835712d46d48b6e40bb82bfac43, type: 2}
+  hitFlash: {fileID: 1894352088}
+  knockback: {fileID: 1894352087}
+  currentHP: 0
+  hpSlider: {fileID: 389673364}
 --- !u!50 &1894352092
 Rigidbody2D:
   serializedVersion: 5
@@ -16245,7 +16170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b17727832be072b40af5b08418daf33e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHP: 10
+  maxHP: 3
   currentHP: 0
   invincibleTime: 0.5
   knockback: {fileID: 1894352087}
@@ -16304,11 +16229,10 @@ MonoBehaviour:
   topLane: {fileID: 1334564276}
   bottomLane: {fileID: 502158874}
   polarity: {fileID: 1894352100}
-  playerRoot: {fileID: 0}
-  switchDuration: 0.2
-  repelHoldTime: 1
-  repelHeightPercent: 0.3
-  visualRoot: {fileID: 1894352093}
+  switchDuration: 0.6
+  repelHoldTime: 0.15
+  repelHeightPercent: 0.65
+  visualRoot: {fileID: 309846308}
 --- !u!114 &1894352102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16322,55 +16246,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   runSpeed: 5
---- !u!1 &1898098769
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1898098771}
-  - component: {fileID: 1898098770}
-  m_Layer: 0
-  m_Name: CameraIntroSequence
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1898098770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1898098769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ac787fc856f56e4db37bc9aa58470f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraIntroSequence
-  playerCam: {fileID: 1069114650}
-  finishCam: {fileID: 348997141}
-  playerViewTime: 1.5
-  finishViewTime: 4
-  returnDelay: 0.5
---- !u!4 &1898098771
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1898098769}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 247.7944, y: -1.73862, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1950899488
 GameObject:
   m_ObjectHideFlags: 0
@@ -16909,4 +16784,3 @@ SceneRoots:
   - {fileID: 117089032}
   - {fileID: 710823496}
   - {fileID: 761820857}
-  - {fileID: 1898098771}

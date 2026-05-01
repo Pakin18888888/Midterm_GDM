@@ -14,10 +14,12 @@ GameObject:
   - component: {fileID: 6512340255367819056}
   - component: {fileID: 7619650709153895685}
   - component: {fileID: 6793030052044734784}
-  - component: {fileID: 8860053063745919735}
   - component: {fileID: 5773339147534842399}
-  - component: {fileID: 1429680574182864391}
-  - component: {fileID: 8251986271096368296}
+  - component: {fileID: 3198199936932332903}
+  - component: {fileID: 7746320292794515715}
+  - component: {fileID: 1667824175073754929}
+  - component: {fileID: 9146381458575071633}
+  - component: {fileID: 1593512039861185962}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -5014,28 +5016,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   config: {fileID: 11400000, guid: 4ef4b835712d46d48b6e40bb82bfac43, type: 2}
---- !u!114 &8860053063745919735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5662777844913838898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad7c21d626bda144394af46d0673fda1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
-  config: {fileID: 11400000, guid: 4ef4b835712d46d48b6e40bb82bfac43, type: 2}
-  player: {fileID: 0}
-  firePoint: {fileID: 5873700027605337399}
-  projectilePrefab: {fileID: 6249017204063600022, guid: 8f644bcb061449c4490e0d8f8932d2e6, type: 3}
-  anim: {fileID: 0}
-  attackTriggerName: attack
-  shootDelay: 0.1
-  laneTolerance: 1
-  enemyLane: {fileID: 8251986271096368296}
-  playerMovement: {fileID: 0}
 --- !u!114 &5773339147534842399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5052,7 +5032,7 @@ MonoBehaviour:
   positiveColor: {r: 1, g: 0, b: 0, a: 1}
   negativeColor: {r: 0, g: 0, b: 1, a: 1}
   polarityVFX: {fileID: 6577035054441140696}
---- !u!114 &1429680574182864391
+--- !u!114 &3198199936932332903
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5061,16 +5041,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5662777844913838898}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45cb1cab1a758814c93cc8f8d9f5ce67, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c59f519298d87e4ead7a1284b3cc0e2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyLife
-  config: {fileID: 11400000, guid: 4ef4b835712d46d48b6e40bb82bfac43, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  maxHP: 1
+  currentHP: 0
   rb: {fileID: 6512340255367819056}
   knockbackForce: 6
   dropItemPrefab: {fileID: 3860239899961238563, guid: f600d272425e8dc4ab1289af868058f5, type: 3}
   dropCount: 1
-  currentHP: 0
---- !u!114 &8251986271096368296
+--- !u!114 &7746320292794515715
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5079,10 +5059,60 @@ MonoBehaviour:
   m_GameObject: {fileID: 5662777844913838898}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb0d0a0cb6b3b57458cff2643fdeeb80, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b5113a9ef46c934fb8a6c1be16c5817, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyLane
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  movement: {fileID: 6793030052044734784}
+  combat: {fileID: 1667824175073754929}
+  health: {fileID: 3198199936932332903}
+  laneInfo: {fileID: 9146381458575071633}
+  polarity: {fileID: 5773339147534842399}
+--- !u!114 &1667824175073754929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5662777844913838898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 250fad78f8345c14e8e98e1eed1e3ebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyCombat
+  config: {fileID: 11400000, guid: 4ef4b835712d46d48b6e40bb82bfac43, type: 2}
+  player: {fileID: 0}
+  playerRoot: {fileID: 0}
+  firePoint: {fileID: 5873700027605337399}
+  projectilePrefab: {fileID: 2649667557991209455, guid: 8f644bcb061449c4490e0d8f8932d2e6, type: 3}
+  laneInfo: {fileID: 9146381458575071633}
+  preShootDelay: 0.1
+--- !u!114 &9146381458575071633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5662777844913838898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 024d15c208337994cb9e15d2eafe4670, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyLaneInfo
   isTopLane: 0
+--- !u!114 &1593512039861185962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5662777844913838898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c38bbaca2d1e68469ea0658929ca496, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
+  speed: 7
+  lifeTime: 3
 --- !u!1 &7381372825380705001
 GameObject:
   m_ObjectHideFlags: 0
