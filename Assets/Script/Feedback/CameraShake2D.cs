@@ -16,12 +16,29 @@ public class CameraShake2D : MonoBehaviour
         originalPos = transform.localPosition;
     }
 
-    public void Shake(float duration, float magnitude)
+    public void Shake(float intensity, float duration)
     {
-        if (shakeRoutine != null)
-            StopCoroutine(shakeRoutine);
+        StartCoroutine(CoShake(intensity, duration));
+    }
 
-        shakeRoutine = StartCoroutine(ShakeRoutine(duration, magnitude));
+    IEnumerator CoShake(float intensity, float duration)
+    {
+        Vector3 originalPos = transform.localPosition;
+
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            float x = Random.Range(-1f, 1f) * intensity;
+            float y = Random.Range(-1f, 1f) * intensity;
+
+            transform.localPosition = originalPos + new Vector3(x, y, 0);
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localPosition = originalPos;
     }
 
     private IEnumerator ShakeRoutine(float duration, float magnitude)

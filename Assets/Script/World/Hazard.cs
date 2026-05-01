@@ -1,42 +1,42 @@
-using UnityEngine;
+// using UnityEngine;
 
-public class Hazard : MonoBehaviour
-{
-    [SerializeField] private string playerTag = "Player";
-    [SerializeField] private float destroyDelay = 0.05f;
+// public class Hazard : MonoBehaviour
+// {
+//     [SerializeField] private string playerTag = "Player";
+//     [SerializeField] private float destroyDelay = 0.05f;
 
-    [Header("Sound")]
-    [SerializeField] private AudioClip hitSound;
-    [SerializeField] private float volume = 1f;
+//     [Header("Sound")]
+//     [SerializeField] private AudioClip hitSound;
+//     [SerializeField] private float volume = 1f;
 
-    private bool triggered;
+//     private bool triggered;
 
-    private void Reset()
-    {
-        var c = GetComponent<Collider2D>();
-        if (c != null)
-            c.isTrigger = true;
-    }
+//     private void Reset()
+//     {
+//         var c = GetComponent<Collider2D>();
+//         if (c != null)
+//             c.isTrigger = true;
+//     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!other.CompareTag(playerTag)) return;
-        if (triggered) return;
-        triggered = true;
+//     private void OnTriggerEnter2D(Collider2D other)
+//     {
+//         if (!other.CompareTag(playerTag)) return;
+//         if (triggered) return;
+//         triggered = true;
 
-        if (hitSound != null)
-            AudioSource.PlayClipAtPoint(hitSound, transform.position, volume);
+//         if (hitSound != null)
+//             AudioSource.PlayClipAtPoint(hitSound, transform.position, volume);
 
-        PlayerRoot playerRoot = other.GetComponent<PlayerRoot>();
-        if (playerRoot != null)
-            playerRoot.OnDeath();
+//         PlayerRoot playerRoot = other.GetComponent<PlayerRoot>();
+//         if (playerRoot != null)
+//             playerRoot.OnDeath();
 
-        GameFlowController.I?.GameOver();
+//         GameFlowController.I?.GameOver();
 
-        Collider2D col = GetComponent<Collider2D>();
-        if (col != null)
-            col.enabled = false;
+//         Collider2D col = GetComponent<Collider2D>();
+//         if (col != null)
+//             col.enabled = false;
 
-        Destroy(gameObject, destroyDelay);
-    }
-}
+//         Destroy(gameObject, destroyDelay);
+//     }
+// }

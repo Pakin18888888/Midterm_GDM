@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 2659395871022936438}
   - component: {fileID: 3392381016799886168}
   - component: {fileID: 5565718763582669482}
-  - component: {fileID: 1282472111453556877}
+  - component: {fileID: 2414914571806116723}
   m_Layer: 0
   m_Name: Coins
   m_TagString: Untagged
@@ -237,7 +237,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 4.82
---- !u!114 &1282472111453556877
+--- !u!114 &2414914571806116723
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -246,11 +246,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3860239899961238563}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95b231afa15e87e47a3e3c72955eaebd, type: 3}
+  m_Script: {fileID: 11500000, guid: b765deb4a9e611e46b97a72fa0510192, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CollectibleCoin
+  m_EditorClassIdentifier: Assembly-CSharp::ItemController
   value: 1
   playerTag: Player
-  collectSound: {fileID: 0}
+  collectSound: {fileID: 8300000, guid: 18caa25d2d643e549b499cef855a444b, type: 3}
   volume: 1
   moveSpeed: 6
+  type: 0

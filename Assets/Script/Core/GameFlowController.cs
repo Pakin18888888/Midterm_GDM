@@ -1,152 +1,135 @@
-using System.Collections;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+// using System.Collections;
+// using UnityEngine;
+// using UnityEngine.SceneManagement;
 
-public class GameFlowController : MonoBehaviour
-{
-    public static GameFlowController I { get; private set; }
+// public class GameFlowController : MonoBehaviour
+// {
+//     public static GameFlowController I { get; private set; }
 
-    [Header("References")]
-    [SerializeField] private HUDController hud;
-    [SerializeField] private CountdownController countdown;
-    [SerializeField] private PlayerRoot player;
-    [SerializeField] private EnemySpawner enemySpawner;
+//     [Header("References")]
+//     [SerializeField] private HUDController hud;
+//     [SerializeField] private CountdownController countdown;
+//     [SerializeField] private PlayerRoot player;
+//     [SerializeField] private EnemySpawner enemySpawner;
 
-    [Header("Game Rules")]
-    [SerializeField] private int coinsToWin = 5;
-    [SerializeField] private CameraIntroSequence cameraIntro;
+//     [Header("Game Rules")]
+//     [SerializeField] private CameraIntroSequence cameraIntro;
+//     [SerializeField] private ScoreManager scoreManager;
 
-    public GameState State { get; private set; } = GameState.Boot;
-    public int Coins { get; private set; }
+//     public GameState State { get; private set; } = GameState.Boot;
+//     public int Coins { get; private set; }
 
-    private void Awake()
-    {
-        if (I != null && I != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
+//     private void Awake()
+//     {
+//         if (I != null && I != this)
+//         {
+//             Destroy(gameObject);
+//             return;
+//         }
 
-        I = this;
-    }
+//         I = this;
+//     }
 
-    private void Start()
-    {
-        Time.timeScale = 1f;
+//     private void Start()
+//     {
+//         Time.timeScale = 1f;
 
-        Coins = 0;
-        hud?.SetCoins(Coins, coinsToWin);
-        hud?.HideRestartButton();
-        hud?.ClearMessage();
+//         Coins = 0;
+//         hud?.HideRestartButton();
+//         hud?.ClearMessage();
 
-        AudioManager.I?.PlayBGM();
+//         AudioManager.I?.PlayBGM();
+//         scoreManager?.ResetAll();
 
-        BeginCountdown();
-    }
+//         BeginCountdown();
+//     }
 
-    public void BeginCountdown()
-    {
-        State = GameState.Countdown;
+//     public void BeginCountdown()
+//     {
+//         State = GameState.Countdown;
 
-        player?.SetControlEnabled(false);
+//         player?.SetControlEnabled(false);
 
-        StartCoroutine(CoStartSequence());
-    }
+//         StartCoroutine(CoStartSequence());
+//     }
 
-    private IEnumerator CoStartSequence()
-    {
-        // 🎬 เล่น intro กล้องก่อน
-        if (cameraIntro != null)
-            yield return StartCoroutine(cameraIntro.PlayIntro());
+//     private IEnumerator CoStartSequence()
+//     {
+//         // 🎬 เล่น intro กล้องก่อน
+//         if (cameraIntro != null)
+//             yield return StartCoroutine(cameraIntro.PlayIntro());
 
-        // 🔊 เสียง countdown
-        AudioManager.I?.PlayCountdown();
+//         // 🔊 เสียง countdown
+//         AudioManager.I?.PlayCountdown();
 
-        if (countdown != null)
-            countdown.Begin(OnCountdownFinished);
-        else
-            OnCountdownFinished();
-    }
+//         if (countdown != null)
+//             countdown.Begin(OnCountdownFinished);
+//         else
+//             OnCountdownFinished();
+//     }
 
-    private void OnCountdownFinished()
-    {
-        State = GameState.Playing;
+//     private void OnCountdownFinished()
+//     {
+//         State = GameState.Playing;
 
-        AudioManager.I?.PlayGo();
+//         AudioManager.I?.PlayGo();
 
-        player?.StartGameplay();
-        enemySpawner?.StartSpawning();
-    }
+//         player?.StartGameplay();
+//         enemySpawner?.StartSpawning();
+//     }
 
-    public void AddCoin(int amount)
-    {
-        if (State != GameState.Playing) return;
+//     public void GameOver()
+//     {
+//         if (State == GameState.GameOver) return;
 
-        Coins += amount;
-        hud?.SetCoins(Coins, coinsToWin);
+//         State = GameState.GameOver;
+//         scoreManager?.FinalizeScore();
 
-        if (Coins >= coinsToWin)
-            Win();
-    }
+//         AudioManager.I?.StopRunLoop();
+//         AudioManager.I?.PlayGameOver();
+//         AudioManager.I?.FadeOutBGM(0.5f);
 
-    public void Win()
-    {
-        if (State == GameState.Win) return;
+//         player?.OnDeath();
+//         hud?.ShowGameOver();
 
-        State = GameState.Win;
+//         var enemies = FindObjectsByType<EnemyController>(FindObjectsSortMode.None);
+//         foreach (var e in enemies)
+//             e.SetActiveAI(false);
+//     }
 
-        AudioManager.I?.StopRunLoop();
-        AudioManager.I?.PlayWin();
-        AudioManager.I?.FadeOutBGM(0.5f);
+//     public void PauseGame()
+//     {
+//         if (State != GameState.Playing) return;
 
-        player?.OnWin();
-        hud?.ShowWin();
-    }
+//         State = GameState.Paused;
+//         Time.timeScale = 0f;
+//         player?.SetControlEnabled(false);
+//     }
 
-    public void GameOver()
-    {
-        if (State == GameState.GameOver) return;
+//     public void ResumeGame()
+//     {
+//         if (State != GameState.Paused) return;
 
-        State = GameState.GameOver;
+//         State = GameState.Playing;
+//         Time.timeScale = 1f;
+//         player?.SetControlEnabled(true);
+//     }
 
-        AudioManager.I?.StopRunLoop();
-        AudioManager.I?.PlayGameOver();
-        AudioManager.I?.FadeOutBGM(0.5f);
+//     public void RestartGame()
+//     {
+//         Time.timeScale = 1f;
+//         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+//     }
 
-        player?.OnDeath();
-        hud?.ShowGameOver();
+//     public void ShowMessage(string msg, bool autoHide = true)
+//     {
+//         hud?.ShowMessage(msg, autoHide);
+//     }
 
-        var enemies = FindObjectsByType<EnemyController>(FindObjectsSortMode.None);
-        foreach (var e in enemies)
-            e.SetActiveAI(false);
-    }
+//     public void AddScore(int amount)
+// {
+//     if (State != GameState.Playing) return;
 
-    public void PauseGame()
-    {
-        if (State != GameState.Playing) return;
-
-        State = GameState.Paused;
-        Time.timeScale = 0f;
-        player?.SetControlEnabled(false);
-    }
-
-    public void ResumeGame()
-    {
-        if (State != GameState.Paused) return;
-
-        State = GameState.Playing;
-        Time.timeScale = 1f;
-        player?.SetControlEnabled(true);
-    }
-
-    public void RestartGame()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    public void ShowMessage(string msg, bool autoHide = true)
-    {
-        hud?.ShowMessage(msg, autoHide);
-    }
-}
+//     scoreManager?.AddScore(amount);
+// }
+// }
