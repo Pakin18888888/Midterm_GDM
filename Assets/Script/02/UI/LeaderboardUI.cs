@@ -20,21 +20,9 @@ public class LeaderboardUI : MonoBehaviour
 
         Debug.Log("Scores Count: " + scores.Count);
 
-        for (int i = 0; i < scores.Count; i++)
-        {
-            Debug.Log(scores[i].name + " " + scores[i].score);
-
-            GameObject obj =
-                Instantiate(rowPrefab, contentParent);
-
-            var row = obj.GetComponent<LeaderboardRowUI>();
-
-            row.SetData(
-                i + 1,
-                scores[i].name,
-                scores[i].score
-            );
-        }
+        StartCoroutine(
+            SpawnRows(scores, true)
+        );
     }
 
     public void UpdateUI(bool playAnimation = false)
@@ -59,7 +47,7 @@ public class LeaderboardUI : MonoBehaviour
 
             row.SetData(i + 1, scores[i].name, scores[i].score);
 
-            if (scores[i].name == "YOU")
+            if (scores[i].name == PlayerNameManager.Instance.GetName())
             {
                 yourIndex = i;
 

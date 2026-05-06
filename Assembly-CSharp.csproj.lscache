@@ -207,7 +207,9 @@ Assets/
    MagnetEffect.cs
   Login/
    LeaderboardManager.cs
+   NameInputUI.cs
    NetworkHelper.cs
+   PlayerNameManager.cs
    UGSInitializer.cs
   Map/
    ChunkData.cs

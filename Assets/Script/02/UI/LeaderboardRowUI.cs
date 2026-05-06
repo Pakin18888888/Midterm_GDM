@@ -18,10 +18,24 @@ public class LeaderboardRowUI : MonoBehaviour
         // 🟡 Highlight YOU
         if (rank == 1)
         {
-            background.color = new Color(1f, 0.8f, 0.2f); // สีทอง
-            scoreText.color = Color.black;
+            background.color = new Color(1f, 0.8f, 0.2f);
+
+            // LeanTween.scale(gameObject,
+            //     Vector3.one * 1.03f,
+            //     0.5f)
+            //     .setLoopPingPong();
         }
-        else if (name == "YOU")
+        else if (rank == 2)
+        {
+            background.color =
+                new Color(.8f, .8f, .8f);
+}
+        else if (rank == 3)
+        {
+            background.color =
+                new Color(.8f, .6f, .4f);
+        }
+        else if (name ==  PlayerNameManager.Instance.GetName())
         {
             background.color = new Color(0.2f, 0.8f, 1f); // ฟ้า
             scoreText.color = Color.black;
@@ -51,7 +65,7 @@ public class LeaderboardRowUI : MonoBehaviour
             .setLoopPingPong()
             .setOnUpdate((float t) =>
             {
-                background.color = Color.Lerp(original, Color.cyan, t);
+                background.color = Color.Lerp(original, Color.green, t);
             });
     }
 

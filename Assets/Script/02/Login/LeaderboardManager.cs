@@ -6,9 +6,30 @@ using Unity.Services.Authentication;
 
 public class LeaderboardManager : MonoBehaviour
 {
+    [System.Serializable]
+    public class FakeScore
+    {
+        public string name;
+        public int score;
+    }
     public static LeaderboardManager Instance;
 
     const string leaderboardID = "TestLeaderboard";
+
+    List<FakeScore> fakeScores =
+        new List<FakeScore>()
+        {
+            new FakeScore(){ name="CyberFox", score=1200 },
+            new FakeScore(){ name="Nova", score=1150 },
+            new FakeScore(){ name="Shadow", score=1100 },
+            new FakeScore(){ name="Volt", score=500 },
+            new FakeScore(){ name="Echo", score=300 },
+            new FakeScore(){ name="Zen", score=250 },
+            new FakeScore(){ name="Pixel", score=200 },
+            new FakeScore(){ name="Ghost", score=100 },
+            new FakeScore(){ name="Alpha", score=10 },
+            new FakeScore(){ name="YOU", score=0 },
+        };
 
     void Awake()
     {
@@ -50,7 +71,13 @@ public class LeaderboardManager : MonoBehaviour
 
             var scores =
                 await LeaderboardsService.Instance
-                .GetScoresAsync(leaderboardID);
+                .GetScoresAsync(
+                    leaderboardID,
+                    new GetScoresOptions
+                    {
+                        Limit = 10
+                    }
+                );
 
             foreach (var s in scores.Results)
             {
@@ -64,12 +91,31 @@ public class LeaderboardManager : MonoBehaviour
                 if (s.PlayerId ==
                     AuthenticationService.Instance.PlayerId)
                 {
-                    data.name = "YOU";
+                    data.name = PlayerNameManager.Instance.GetName();
                 }
 
                 result.Add(data);
             }
+
+            foreach (var bot in fakeScores)
+            {
+                ScoreboardManager.ScoreData data =
+                    new ScoreboardManager.ScoreData();
+
+                data.name = bot.name;
+                data.score = bot.score;
+
+                result.Add(data);
+            }
+
+            result.Sort((a, b) => b.score.CompareTo(a.score));
+
+            if (result.Count > 10)
+            {
+                result = result.GetRange(0, 10);
+            }
         }
+        
         catch (System.Exception e)
         {
             Debug.LogError(e.Message);
