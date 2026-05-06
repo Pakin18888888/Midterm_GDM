@@ -55,10 +55,9 @@ public class PlayerHealths : MonoBehaviour
         OnHPChanged?.Invoke(hp);
 
         Debug.Log("Player Hit!");
-        ScoreManager.Instance.ResetStreak();
+        ScoreManager.Instance?.ResetStreak();
 
         // 💥 effect
-        rb.AddForce(Vector2.left * 5f, ForceMode2D.Impulse);
         CameraShakes.Instance.Shake(.5f, 2f);
 
         StartCoroutine(InvincibleRoutine());
@@ -109,6 +108,29 @@ public class PlayerHealths : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
 
-        GameManagers.Instance.GameState(false);
+        StartCoroutine(DeathSequence());
+    }
+
+    IEnumerator DeathSequence()
+    {
+        // 💥 Slow motion
+        Time.timeScale = 0.3f;
+
+        // 📳 จอสั่นแรง
+        CameraShakes.Instance.Shake(1f, 4f);
+
+        // รอแบบ realtime (ไม่โดน timeScale)
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        // 🌑 Fade ดำ
+        UIManager.Instance.FadeIn();
+
+        yield return new WaitForSecondsRealtime(0.8f);
+
+        // กลับ time ปกติ
+        Time.timeScale = 1f;
+
+        // 🔚 Game Over
+        GameManagers.Instance.GameOver();
     }
 }

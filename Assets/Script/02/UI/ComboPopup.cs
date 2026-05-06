@@ -5,7 +5,7 @@ public class ComboPopup : MonoBehaviour
 {
     public float moveSpeed = 1.5f;
     public float lifeTime = 1f;
-    public float floatAmplitude = 30f; // แกว่งซ้ายขวา
+    public float floatAmplitude = 30f;
     public float floatFrequency = 3f;
 
     private TextMeshProUGUI text;
@@ -18,18 +18,14 @@ public class ComboPopup : MonoBehaviour
     {
         text = GetComponent<TextMeshProUGUI>();
         rect = GetComponent<RectTransform>();
-
-        // เพิ่ม CanvasGroup (ใช้ fade)
         canvasGroup = gameObject.AddComponent<CanvasGroup>();
     }
 
     void Start()
     {
-        // 🔥 เด้งตอนเกิด
         rect.localScale = Vector3.zero;
-        LeanTween.scale(gameObject, Vector3.one * 1.3f, 0.15f).setEaseOutBack();
 
-        // แล้วหดกลับ
+        LeanTween.scale(gameObject, Vector3.one * 1.3f, 0.15f).setEaseOutBack();
         LeanTween.scale(gameObject, Vector3.one, 0.1f).setDelay(0.15f);
 
         Destroy(gameObject, lifeTime);
@@ -39,14 +35,17 @@ public class ComboPopup : MonoBehaviour
     {
         time += Time.deltaTime;
 
-        // 🎈 ลอยขึ้น
+        // ลอยขึ้น
         rect.anchoredPosition += Vector2.up * moveSpeed * Time.deltaTime * 100f;
 
-        // 🌊 แกว่งซ้ายขวา
+        // แกว่ง
         float xOffset = Mathf.Sin(time * floatFrequency) * floatAmplitude * Time.deltaTime;
         rect.anchoredPosition += new Vector2(xOffset, 0);
 
-        // 🌫 fade ออก
+        // หมุนเล็กน้อย
+        rect.rotation = Quaternion.Euler(0, 0, Mathf.Sin(time * 5f) * 10f);
+
+        // fade
         canvasGroup.alpha = 1 - (time / lifeTime);
     }
 
@@ -54,16 +53,31 @@ public class ComboPopup : MonoBehaviour
     {
         text.text = value;
 
-        if (value == "x2")
+        // 🔥 Combo
+        if (value.StartsWith("x"))
         {
-            text.color = Color.yellow;
-        }
-        else if (value == "x3")
-        {
-            text.color = Color.red;
+            if (value == "x2")
+                text.color = Color.yellow;
 
-            // 💥 ขยายตัวอักษร
-            text.fontSize *= 1.5f;
+            else if (value == "x3")
+            {
+                text.color = Color.red;
+                text.fontSize *= 1.5f;
+            }
+        }
+        // 💥 Score
+        else if (value.StartsWith("+"))
+        {
+            int score = int.Parse(value.Replace("+", ""));
+
+            if (score >= 20)
+                text.color = Color.red;
+            else
+                text.color = Color.yellow;
+
+            // เด้งแรงขึ้น
+            rect.localScale = Vector3.zero;
+            LeanTween.scale(gameObject, Vector3.one * 1.4f, 0.15f).setEaseOutBack();
         }
     }
 }

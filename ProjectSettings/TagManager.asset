@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - Coin
+  - Enemy
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - Obstacle
   - Coin
   - Magnet
-  - 
+  - Bullet
   - 
   - 
   - 

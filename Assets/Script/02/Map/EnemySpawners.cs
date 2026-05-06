@@ -1,62 +1,93 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab;
-    public Transform player;
+    public float spacing = 2.5f;
+    public int maxEnemyOnScreen = 5;
+    public bool isTopLane = false;
+    float groundOffset = 0.8f; // ปรับเอา
+    public float bottomOffset = 0.8f;
+    public float topOffset = -0.5f;
+    bool hasSpawned = false;
 
-    public float spawnDistance = 25f;
-
-    public float minDelay = 2f;
-    public float maxDelay = 4f;
-
-    public int minCount = 2;
-    public int maxCount = 4;
-
-    public float[] lanes = { -4.63f, -2.5f }; // lane ล่าง / บน
-
-    void Start()
+    public void Spawn()
     {
-        StartCoroutine(SpawnLoop());
+        if (hasSpawned) return;
+
+        StartCoroutine(SpawnRoutine());
     }
 
-    IEnumerator SpawnLoop()
+    IEnumerator SpawnRoutine()
     {
-        yield return new WaitForSeconds(3f); // delay ตอนเริ่ม
+        if (!GameManagers.Instance.CanSpawnEnemy())
+            yield break;
 
-        while (true)
-        {
-            if (!GameManagers.Instance.CanSpawnEnemy())
-            {
-                yield return null;
-                continue;
-            }
+        ChunkData data = GetComponentInParent<ChunkData>();
+        if (data == null) yield break;
+        float distanceFromPlayer = transform.parent.position.x - MapManager.Instance.player.position.x;
 
-            SpawnGroup();
+        int stage = GameManagers.Instance.stage;
+        // 🔥 เงื่อนไขที่แกต้องการ
+        if (stage < 2 || stage > 10)
+            yield break;
 
-            float delay = Random.Range(minDelay, maxDelay);
-            yield return new WaitForSeconds(delay);
-        }
-    }
+        hasSpawned = true;
 
-    void SpawnGroup()
-    {
-        int count = Random.Range(minCount, maxCount + 1);
+        int count = Mathf.Clamp(2 + stage, 4, 8);
 
-        float baseX = player.position.x + spawnDistance;
+        if (stage == 2)
+            count = Random.Range(4, 7);   // 4–6
+        else if (stage <= 5)
+            count = Random.Range(4, 6);
+        else if (stage <= 10)
+            count = Random.Range(5, 8);
+
+        // 🔥 กันทะลุ
+
+        float speed = 3f + (stage - 1) * 0.7f;
+        float playerX = MapManager.Instance.player.position.x;
+
+        // 🔥 spawn ล่วงหน้า player
+        float startX = playerX + 15f;
 
         for (int i = 0; i < count; i++)
         {
-            float laneY = lanes[Random.Range(0, lanes.Length)];
+            if (!EnemyManager.Instance.CanSpawn())
+                yield break;
+
+            Debug.Log("SPAWN");
+            float baseY = isTopLane
+                ? MapManager.Instance.topY
+                : MapManager.Instance.bottomY;
+
+            float offset = isTopLane ? topOffset : bottomOffset;
+
+            float y = baseY + offset;
+
+            // y += groundOffset;
 
             Vector3 pos = new Vector3(
-                baseX + i * 2f, // เรียงกัน
-                laneY,
+                startX + i * spacing + Random.Range(-1f, 1f),
+                y,
                 0
             );
 
-            Instantiate(enemyPrefab, pos, Quaternion.identity);
+            GameObject enemy = Instantiate(enemyPrefab, pos, Quaternion.identity);
+
+            EnemyManager.Instance.RegisterEnemy(); // 🔥 สำคัญ
+
+            if (isTopLane)
+            {
+                var sr = enemy.GetComponent<SpriteRenderer>();
+                if (sr != null) sr.flipY = true;
+            }
+
+            var move = enemy.GetComponent<EnemyMove>();
+            if (move != null) move.speed = speed;
+
+            yield return new WaitForSeconds(0.4f);
         }
     }
 }

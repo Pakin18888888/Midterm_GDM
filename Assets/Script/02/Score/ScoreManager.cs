@@ -7,6 +7,8 @@ public class ScoreManager : MonoBehaviour
     public int score = 0;
     public int streak = 0;
 
+    public System.Action<int> OnStreakChanged;
+
     void Awake()
     {
         Instance = this;
@@ -16,6 +18,7 @@ public class ScoreManager : MonoBehaviour
     {
         streak++;
 
+        OnStreakChanged?.Invoke(streak);
         int multiplier = GetMultiplier();
         score += amount * multiplier;
 
@@ -26,10 +29,10 @@ public class ScoreManager : MonoBehaviour
             ComboManager.Instance.ShowCombo(multiplier);
 
         // 💥 จอสั่นตอน x3
-        if (multiplier == 3 && CameraShake.Instance != null)
-        {
-            CameraShake.Instance.Shake(.5f, 4f);
-        }
+        // if (multiplier == 3 && CameraShakes.Instance != null)
+        // {
+        //     CameraShakes.Instance.Shake(.5f, 4f);
+        // }
 
         var effect = FindObjectOfType<PlayerEffect>();
         if (effect != null)
@@ -38,13 +41,15 @@ public class ScoreManager : MonoBehaviour
 
     int GetMultiplier()
     {
-        if (streak > 20) return 3;
-        if (streak > 10) return 2;
+        if (streak > 15) return 3;
+        if (streak > 7) return 2;
         return 1;
     }
 
     public void ResetStreak()
     {
         streak = 0;
+
+        OnStreakChanged?.Invoke(streak);
     }
 }

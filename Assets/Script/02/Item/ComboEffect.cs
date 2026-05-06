@@ -13,12 +13,12 @@ public class ComboEffect : MonoBehaviour
     {
         if (streak >= 10)
         {
-            CameraShake.Instance.Shake(0.15f, 0.15f);
+            CameraShakes.Instance.Shake(0.15f, 0.15f);
         }
 
         if (streak >= 20)
         {
-            CameraShake.Instance.Shake(0.25f, 0.25f);
+            CameraShakes.Instance.Shake(0.25f, 0.25f);
         }
     }
 }

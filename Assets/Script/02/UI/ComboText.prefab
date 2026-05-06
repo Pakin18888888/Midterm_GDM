@@ -152,3 +152,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ComboPopup
   moveSpeed: 2
   lifeTime: 1
+  floatAmplitude: 30
+  floatFrequency: 3
