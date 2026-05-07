@@ -8,6 +8,7 @@ public class SaveManager : MonoBehaviour
     void Awake()
     {
         savePath = Path.Combine(Application.persistentDataPath, "save.json");
+        Debug.Log(savePath);
     }
 
     public void SaveJson(string data)
@@ -27,6 +28,14 @@ public class SaveManager : MonoBehaviour
     public void DeleteSave()
     {
         if (File.Exists(savePath))
+        {
             File.Delete(savePath);
+
+            Debug.Log("SAVE FILE DELETED");
+        }
+        else
+        {
+            Debug.Log("NO SAVE FILE");
+        }
     }
 }

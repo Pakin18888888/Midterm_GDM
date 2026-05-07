@@ -18,6 +18,8 @@ public class LeaderboardUI : MonoBehaviour
         List<ScoreboardManager.ScoreData> scores =
             await LeaderboardManager.Instance.GetLeaderboard();
 
+        ScoreboardManager.Instance.SaveOnlineLeaderboard(scores);
+
         Debug.Log("Scores Count: " + scores.Count);
 
         StartCoroutine(

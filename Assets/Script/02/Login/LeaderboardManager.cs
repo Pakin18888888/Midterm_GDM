@@ -28,7 +28,6 @@ public class LeaderboardManager : MonoBehaviour
             new FakeScore(){ name="Pixel", score=200 },
             new FakeScore(){ name="Ghost", score=100 },
             new FakeScore(){ name="Alpha", score=10 },
-            new FakeScore(){ name="YOU", score=0 },
         };
 
     void Awake()
@@ -115,7 +114,7 @@ public class LeaderboardManager : MonoBehaviour
                 result = result.GetRange(0, 10);
             }
         }
-        
+
         catch (System.Exception e)
         {
             Debug.LogError(e.Message);

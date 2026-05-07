@@ -43,7 +43,8 @@ public class ScoreboardManager : MonoBehaviour
         // PlayerPrefs.DeleteAll();
 
         saveManager = FindObjectOfType<SaveManager>();
-        // saveManager.DeleteSave(); // 👈 เพิ่มอันนี้
+
+        saveManager.DeleteSave();
 
         Instance = this;
 
@@ -105,7 +106,10 @@ public class ScoreboardManager : MonoBehaviour
         int bestScore = Mathf.Max(score, GetHighScore());
 
         // 🔍 หา YOU เดิม
-        ScoreData existing = leaderboard.scores.Find(s => s.name == "YOU");
+        ScoreData existing = leaderboard.scores.Find(
+            s => s.name ==
+            PlayerNameManager.Instance.GetName()
+        );
 
         if (existing != null)
         {
@@ -117,7 +121,7 @@ public class ScoreboardManager : MonoBehaviour
         else
         {
             ScoreData newScore = new ScoreData();
-            newScore.name = "YOU";
+            newScore.name = PlayerNameManager.Instance.GetName();
             newScore.score = bestScore;
 
             leaderboard.scores.Add(newScore);
@@ -167,5 +171,18 @@ public class ScoreboardManager : MonoBehaviour
             string json = JsonUtility.ToJson(leaderboard);
             saveManager.SaveJson(json);
         }
+    }
+
+    public void SaveOnlineLeaderboard(
+    List<ScoreData> onlineScores)
+    {
+        leaderboard.scores = onlineScores;
+
+        string json =
+            JsonUtility.ToJson(leaderboard);
+
+        saveManager.SaveJson(json);
+
+        Debug.Log("Online Leaderboard Saved");
     }
 }

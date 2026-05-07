@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Services.Authentication;
 
 public class PlayerNameManager : MonoBehaviour
 {
@@ -11,10 +12,16 @@ public class PlayerNameManager : MonoBehaviour
         Instance = this;
     }
 
-    public void SaveName(string newName)
+    public async void SaveName(string newName)
     {
         PlayerPrefs.SetString(PLAYER_NAME_KEY, newName);
+
+        await UGSInitializer.InitTask;
+
+        await AuthenticationService.Instance.UpdatePlayerNameAsync(newName);
+        
         PlayerPrefs.Save();
+        Debug.Log("Name Updated");
     }
 
     public string GetName()
