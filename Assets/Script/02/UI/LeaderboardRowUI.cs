@@ -38,7 +38,7 @@ public class LeaderboardRowUI : MonoBehaviour
         else if (name ==  PlayerNameManager.Instance.GetName())
         {
             background.color = new Color(0.2f, 0.8f, 1f); // ฟ้า
-            scoreText.color = Color.black;
+            // scoreText.color = Color.black;
         }
         else
         {
