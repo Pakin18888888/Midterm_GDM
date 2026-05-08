@@ -198,7 +198,10 @@ Assets/
    EnemyMove.cs
    EnemyMovements.cs
    EnemyPolaritys.cs
-  GameManager/GameManagers.cs
+  GameManager/
+   AuthManager.cs
+   BootManager.cs
+   GameManagers.cs
   Item/
    CoinLineSpawner.cs
    ComboEffect.cs
@@ -206,6 +209,7 @@ Assets/
    ItemData.cs
    MagnetEffect.cs
   Login/
+   AccountLinker.cs
    LeaderboardManager.cs
    NameInputUI.cs
    NetworkHelper.cs
@@ -241,6 +245,8 @@ Assets/
    HPBarUI.cs
    LeaderboardRowUI.cs
    LeaderboardUI.cs
+   MainMenuUI.cs
+   ProfileUI.cs
    ScoreTween.cs
    StreakBarUI.cs
    UIManager.cs

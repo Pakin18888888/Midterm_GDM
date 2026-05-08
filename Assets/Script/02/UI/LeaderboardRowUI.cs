@@ -43,9 +43,9 @@ public class LeaderboardRowUI : MonoBehaviour
         else
         {
             if (rank % 2 == 0)
-                background.color = new Color(0.2f, 0.2f, 0.2f);
+                background.color = new Color(0.4f, 0.4f, 0.4f);
             else
-                background.color = new Color(0.3f, 0.3f, 0.3f);
+                background.color = new Color(0.5f, 0.5f, 0.5f);
 
             scoreText.color = Color.white;
         }
