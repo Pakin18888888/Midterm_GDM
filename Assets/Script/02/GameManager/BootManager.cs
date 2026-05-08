@@ -4,22 +4,40 @@ using Unity.Services.Authentication;
 
 public class BootManager : MonoBehaviour
 {
+    const string LOGOUT_KEY = "LOGOUT";
     async void Start()
     {
         await UGSInitializer.InitTask;
-        SceneManager.LoadScene("LoginScene");
 
-        // if (AuthenticationService.Instance.SessionTokenExists)
-        // {
-        //     // Debug.Log("AUTO LOGIN");
+        // 🔥 Guest Login อัตโนมัติ
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance
+                .SignInAnonymouslyAsync();
+        }
 
-        //     // SceneManager.LoadScene("MainMenuScene");
-        // }
-        // else
-        // {
-        //     Debug.Log("GO LOGIN");
+        // 🔥 เช็คชื่อ
+        if (string.IsNullOrEmpty(
+            PlayerNameManager.Instance.GetName()))
+        {
+            SceneManager.LoadScene("NameScene");
+        }
+        else
+        {
+            SceneManager.LoadScene("MainMenuScene");
+        }
+    }
 
-        //     SceneManager.LoadScene("LoginScene");
-        // }
+    public void Logout()
+    {
+        AuthenticationService.Instance
+            .SignOut(true);
+
+        PlayerPrefs.SetInt("LOGOUT", 1);
+
+        PlayerNameManager.Instance
+            .DeleteName();
+
+        SceneManager.LoadScene("BootScene");
     }
 }

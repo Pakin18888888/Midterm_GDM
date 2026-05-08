@@ -2,69 +2,93 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Services.Authentication;
-using System.Threading.Tasks;
 
 public class ProfileUI : MonoBehaviour
 {
+    [Header("Texts")]
     public TMP_Text playerNameText;
     public TMP_Text accountTypeText;
     public TMP_Text highScoreText;
     public TMP_Text bestStreakText;
 
+    [Header("Input")]
     public TMP_InputField nameInput;
 
-    async void OnEnable()
+    void OnEnable()
     {
-        await UGSInitializer.InitTask;
-
         Refresh();
     }
 
     public void Refresh()
     {
-        if (PlayerNameManager.Instance != null)
+        // 👤 Player Name
+        playerNameText.text =
+            "Player : " +
+            PlayerNameManager.Instance.GetName();
+
+        // 🏆 High Score
+        highScoreText.text =
+            "High Score : " +
+            ScoreboardManager.Instance.GetHighScore();
+
+        // ⚡ Best Streak
+        bestStreakText.text =
+            "Best Streak : " +
+            ScoreboardManager.Instance.GetBestStreak();
+
+        // 🔐 Account Type
+        if (AuthenticationService.Instance.IsSignedIn)
         {
-            playerNameText.text =
-                PlayerNameManager.Instance.GetName();
+            accountTypeText.text =
+                "Account : Guest";
         }
-
-        if (ScoreboardManager.Instance != null)
+        else
         {
-            highScoreText.text =
-                "High Score : " +
-                ScoreboardManager.Instance.GetHighScore();
-
-            bestStreakText.text =
-                "Best Streak : " +
-                ScoreboardManager.Instance.GetBestStreak();
-        }
-
-        if (Unity.Services.Core.UnityServices.State ==
-    Unity.Services.Core.ServicesInitializationState.Initialized)
-        {
-            if (AuthenticationService.Instance.IsSignedIn)
-            {
-                accountTypeText.text = "Logged In";
-            }
-            else
-            {
-                accountTypeText.text = "Guest";
-            }
+            accountTypeText.text =
+                "Account : Offline";
         }
     }
+
+    // =====================
+    // ✏ Change Name
+    // =====================
     public void ChangeName()
     {
+        string newName = nameInput.text;
+
+        if (string.IsNullOrEmpty(newName))
+            return;
+
         PlayerNameManager.Instance
-            .SaveName(nameInput.text);
+            .SaveName(newName);
 
         Refresh();
+
+        Debug.Log("NAME CHANGED");
     }
 
+    // =====================
+    // 🚪 Logout
+    // =====================
     public void Logout()
     {
+        // 🔥 logout จริง
         AuthenticationService.Instance
-            .SignOut();
+            .SignOut(true);
 
-        SceneManager.LoadScene("LoginScene");
+        // 🔥 ล้างชื่อ
+        PlayerNameManager.Instance
+            .DeleteName();
+
+        // 🔥 กลับ boot
+        SceneManager.LoadScene("BootScene");
+    }
+
+    // =====================
+    // ❌ Close Panel
+    // =====================
+    public void ClosePanel()
+    {
+        gameObject.SetActive(false);
     }
 }

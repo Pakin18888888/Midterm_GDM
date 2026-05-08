@@ -44,7 +44,7 @@ public class ScoreboardManager : MonoBehaviour
 
         saveManager = FindObjectOfType<SaveManager>();
 
-        saveManager.DeleteSave();
+        // saveManager.DeleteSave();
 
         Instance = this;
 

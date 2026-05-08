@@ -4,6 +4,18 @@ using UnityEngine.SceneManagement;
 public class MainMenuUI : MonoBehaviour
 {
     public GameObject profilePanel;
+    public RectTransform logo;
+
+    void Start()
+    {
+        LeanTween.moveY(
+            logo,
+            logo.anchoredPosition.y + 20f,
+            1f
+        )
+        .setLoopPingPong()
+        .setEaseInOutSine();
+    }
 
     public void PlayGame()
     {
@@ -24,4 +36,6 @@ public class MainMenuUI : MonoBehaviour
     {
         Application.Quit();
     }
+
+    
 }

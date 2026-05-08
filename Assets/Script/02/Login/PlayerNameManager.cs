@@ -19,7 +19,7 @@ public class PlayerNameManager : MonoBehaviour
         await UGSInitializer.InitTask;
 
         await AuthenticationService.Instance.UpdatePlayerNameAsync(newName);
-        
+
         PlayerPrefs.Save();
         Debug.Log("Name Updated");
     }
@@ -30,5 +30,10 @@ public class PlayerNameManager : MonoBehaviour
             PLAYER_NAME_KEY,
             "PLAYER"
         );
+    }
+
+    public void DeleteName()
+    {
+        PlayerPrefs.DeleteKey("PLAYER_NAME");
     }
 }

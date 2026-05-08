@@ -246,6 +246,7 @@ Assets/
    LeaderboardRowUI.cs
    LeaderboardUI.cs
    MainMenuUI.cs
+   NameSetupUI.cs
    ProfileUI.cs
    ScoreTween.cs
    StreakBarUI.cs
