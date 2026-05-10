@@ -4,10 +4,12 @@ using UnityEngine.SceneManagement;
 public class MainMenuUI : MonoBehaviour
 {
     public GameObject profilePanel;
+    public GameObject leaderboardPanel;
     public RectTransform logo;
 
     void Start()
     {
+
         LeanTween.moveY(
             logo,
             logo.anchoredPosition.y + 20f,
@@ -20,6 +22,25 @@ public class MainMenuUI : MonoBehaviour
     public void PlayGame()
     {
         SceneManager.LoadScene("MainScene");
+    }
+
+    public void OpenLeaderboard()
+    {
+        leaderboardPanel.SetActive(true);
+
+        LeanTween.scale(
+            leaderboardPanel,
+            Vector3.one,
+            0.25f
+        ).setEaseOutBack();
+
+        FindObjectOfType<LeaderboardUI>()
+            .LoadOnline();
+    }
+
+    public void CloseLeaderboard()
+    {
+        leaderboardPanel.SetActive(false);
     }
 
     public void OpenProfile()
@@ -37,5 +58,5 @@ public class MainMenuUI : MonoBehaviour
         Application.Quit();
     }
 
-    
+
 }

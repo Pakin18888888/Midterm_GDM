@@ -22,6 +22,9 @@ public class GameManagers : MonoBehaviour
     public ScoreTween runScoreTween;
     public ScoreTween bestScoreTween;
 
+    public PolarityType topLanePolarity;
+    public PolarityType bottomLanePolarity;
+
     void Awake()
     {
         Instance = this;
@@ -29,6 +32,8 @@ public class GameManagers : MonoBehaviour
     void Start()
     {
         gameOverUI.SetActive(false);
+
+        UpdateLanePolarity();
 
         Debug.Log("HighScore: " + ScoreboardManager.Instance.GetHighScore());
 
@@ -40,6 +45,8 @@ public class GameManagers : MonoBehaviour
 
         gameTime += Time.deltaTime;
 
+        int oldStage = stage;
+
         if (gameTime < 10f) stage = 1;
         else if (gameTime < 25f) stage = 2;
         else if (gameTime < 45f) stage = 3;
@@ -50,6 +57,11 @@ public class GameManagers : MonoBehaviour
         else if (gameTime < 230f) stage = 8;
         else if (gameTime < 280f) stage = 9;
         else stage = 10;
+
+        if (oldStage != stage)
+        {
+            UpdateLanePolarity();
+        }
 
         difficulty = 1f + gameTime * 0.05f;
     }
@@ -134,5 +146,26 @@ public class GameManagers : MonoBehaviour
         await LeaderboardManager.Instance.SubmitScoreSafe(bestScore);
 
         Debug.Log("Sync Complete");
+    }
+
+    void UpdateLanePolarity()
+    {
+        bool flip = stage % 2 == 0;
+
+        if (flip)
+        {
+            topLanePolarity = PolarityType.Positive;
+            bottomLanePolarity = PolarityType.Negative;
+        }
+        else
+        {
+            topLanePolarity = PolarityType.Negative;
+            bottomLanePolarity = PolarityType.Positive;
+        }
+
+        Debug.Log(
+            "Top: " + topLanePolarity +
+            " Bottom: " + bottomLanePolarity
+        );
     }
 }

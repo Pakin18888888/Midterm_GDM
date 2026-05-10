@@ -124,7 +124,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -219,3 +219,5 @@ MonoBehaviour:
   spacing: 2.5
   maxEnemyOnScreen: 5
   isTopLane: 0
+  bottomOffset: 0.8
+  topOffset: -0.5

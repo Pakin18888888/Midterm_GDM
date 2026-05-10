@@ -232,6 +232,8 @@ Assets/
    PlayerMovements.cs
    PlayerPolaritys.cs
   Polarity/
+   LanePolarity.cs
+   LaneVisuals.cs
    PolarityButtonUI.cs
    PolarityType.cs
   SaveManager/

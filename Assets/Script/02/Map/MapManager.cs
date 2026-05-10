@@ -22,6 +22,8 @@ public class MapManager : MonoBehaviour
     public int currentStage = 1;
     public int keepChunksBehind = 10;
 
+    public Material particleMaterial;
+
     float lastSpawnTime = 0f;
     public float spawnCooldown = 2f; int activeEnemyChunks = 0;
 
@@ -156,6 +158,12 @@ public class MapManager : MonoBehaviour
             Quaternion.identity
         );
 
+        LanePolarity bottomPol = bottom.AddComponent<LanePolarity>();
+        bottomPol.lanePolarity = GameManagers.Instance.bottomLanePolarity;
+
+        LaneVisuals bottomVisual = bottom.AddComponent<LaneVisuals>();
+        bottomVisual.particleMaterial = particleMaterial;
+
         SpriteRenderer sr = bottom.GetComponent<SpriteRenderer>();
         if (sr != null)
         {
@@ -217,8 +225,15 @@ public class MapManager : MonoBehaviour
                 int index = (currentStage - 1) % groundSprites.Length;
                 srTop.sprite = groundSprites[index];
             }
+            LanePolarity topPol = top.AddComponent<LanePolarity>();
+            topPol.lanePolarity = GameManagers.Instance.topLanePolarity;
+
+            LaneVisuals topVisual = top.AddComponent<LaneVisuals>();
+            topVisual.particleMaterial = particleMaterial;
+
             ChunkData topData = top.AddComponent<ChunkData>();
             topData.chunkType = currentChunkType;
+
             topData.spawnStage = GameManagers.Instance.stage;
             chunks.Add(top);
 
