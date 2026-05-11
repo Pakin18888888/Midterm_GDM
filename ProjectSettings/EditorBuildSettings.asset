@@ -9,8 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/BootScene.unity
     guid: 1fba05f640db543459eb1205c53492fb
   - enabled: 1
-    path: Assets/Scenes/LoginScene.unity
-    guid: 9945905f0e7887d44a2dee30dacedd50
+    path: Assets/Scenes/START.unity
+    guid: 5e990dea079406f4cb502862094b9e08
+  - enabled: 1
+    path: Assets/Scenes/NameScene.unity
+    guid: 7d1c580c5de3e9742a28b88ea2f41afb
   - enabled: 1
     path: Assets/Scenes/MainMenuScene.unity
     guid: db9622e56232830458265d8eaff14710
@@ -21,4 +24,5 @@ EditorBuildSettings:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 4e9e6443813a67742abb5b704853897c, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 5e7053991c7e7534584685e552b14862, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 0f6fd127b774b4c4da54dfe73b2dd8d1, type: 2}
   m_UseUCBPForAssetBundles: 0

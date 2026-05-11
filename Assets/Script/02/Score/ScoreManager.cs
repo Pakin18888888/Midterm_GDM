@@ -52,4 +52,6 @@ public class ScoreManager : MonoBehaviour
 
         OnStreakChanged?.Invoke(streak);
     }
+
+    
 }

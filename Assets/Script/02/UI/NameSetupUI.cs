@@ -4,11 +4,11 @@ using UnityEngine.SceneManagement;
 
 public class NameSetupUI : MonoBehaviour
 {
-    public TMP_InputField inputField;
+    public TMP_InputField nameInput;
 
     public void ConfirmName()
     {
-        string playerName = inputField.text;
+        string playerName = nameInput.text;
 
         if (string.IsNullOrEmpty(playerName))
             return;

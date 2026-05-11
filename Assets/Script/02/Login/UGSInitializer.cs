@@ -9,6 +9,11 @@ public class UGSInitializer : MonoBehaviour
 
     static Task initTask;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     static async Task InitializeOnce()
     {
         if (initTask != null)
@@ -26,6 +31,7 @@ public class UGSInitializer : MonoBehaviour
     {
         await UnityServices.InitializeAsync();
 
+        // 🔥 auto guest login
         if (!AuthenticationService.Instance.IsSignedIn)
         {
             await AuthenticationService.Instance

@@ -24,6 +24,7 @@ public class GameManagers : MonoBehaviour
 
     public PolarityType topLanePolarity;
     public PolarityType bottomLanePolarity;
+    private Vector3 leaderboardOriginalScale;
 
     void Awake()
     {
@@ -36,6 +37,8 @@ public class GameManagers : MonoBehaviour
         UpdateLanePolarity();
 
         Debug.Log("HighScore: " + ScoreboardManager.Instance.GetHighScore());
+
+        leaderboardOriginalScale = leaderboardPanel.transform.localScale;
 
     }
 
@@ -96,6 +99,9 @@ public class GameManagers : MonoBehaviour
         gameOverUI.SetActive(true);
         gameOverUI.transform.localScale = Vector3.one;
 
+        PlayerPrefs.SetInt("PLAYED_ONCE", 1);
+        PlayerPrefs.Save();
+
         // ✅ pause
         Time.timeScale = 0f;
 
@@ -126,11 +132,30 @@ public class GameManagers : MonoBehaviour
         await SyncOfflineScore();
 
         FindObjectOfType<LeaderboardUI>().LoadOnline();
+
+        leaderboardPanel.transform.localScale = Vector3.zero;
+
+        LeanTween.scale(
+            leaderboardPanel,
+            leaderboardOriginalScale,
+            0.25f
+        ).setEaseOutBack();
     }
 
     public void CloseLeaderboard()
     {
-        leaderboardPanel.SetActive(false);
+        LeanTween.scale(
+            leaderboardPanel,
+            Vector3.zero,
+            0.2f
+        ).setEaseInBack()
+        .setOnComplete(() =>
+        {
+            leaderboardPanel.SetActive(false);
+
+            leaderboardPanel.transform.localScale =
+                leaderboardOriginalScale;
+        });
         gameOverUI.SetActive(true);
     }
     bool hasSynced = false;
@@ -167,5 +192,12 @@ public class GameManagers : MonoBehaviour
             "Top: " + topLanePolarity +
             " Bottom: " + bottomLanePolarity
         );
+    }
+
+    public void BackToMenu()
+    {
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene("MainMenuScene");
     }
 }

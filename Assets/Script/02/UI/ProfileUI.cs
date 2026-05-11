@@ -14,6 +14,9 @@ public class ProfileUI : MonoBehaviour
     [Header("Input")]
     public TMP_InputField nameInput;
 
+    [Header("Confirm")]
+    public GameObject confirmPanel;
+
     void OnEnable()
     {
         Refresh();
@@ -22,9 +25,16 @@ public class ProfileUI : MonoBehaviour
     public void Refresh()
     {
         // 👤 Player Name
+        string playerName =
+    PlayerNameManager.Instance.GetName();
+
+        if (string.IsNullOrEmpty(playerName))
+        {
+            playerName = "No Name";
+        }
+
         playerNameText.text =
-            "Player : " +
-            PlayerNameManager.Instance.GetName();
+            "Player : " + playerName;
 
         // 🏆 High Score
         highScoreText.text =
@@ -37,16 +47,7 @@ public class ProfileUI : MonoBehaviour
             ScoreboardManager.Instance.GetBestStreak();
 
         // 🔐 Account Type
-        if (AuthenticationService.Instance.IsSignedIn)
-        {
-            accountTypeText.text =
-                "Account : Guest";
-        }
-        else
-        {
-            accountTypeText.text =
-                "Account : Offline";
-        }
+        accountTypeText.text = "Account : Guest";
     }
 
     // =====================
@@ -62,6 +63,8 @@ public class ProfileUI : MonoBehaviour
         PlayerNameManager.Instance
             .SaveName(newName);
 
+        Debug.Log(PlayerNameManager.Instance.GetName());
+
         Refresh();
 
         Debug.Log("NAME CHANGED");
@@ -72,16 +75,35 @@ public class ProfileUI : MonoBehaviour
     // =====================
     public void Logout()
     {
-        // 🔥 logout จริง
+        confirmPanel.SetActive(true);
+    }
+
+    public async void ConfirmDelete()
+    {
+        // 🔥 logout + ลบ guest session
         AuthenticationService.Instance
             .SignOut(true);
 
-        // 🔥 ล้างชื่อ
+        // 🔥 ลบข้อมูล local
         PlayerNameManager.Instance
             .DeleteName();
 
-        // 🔥 กลับ boot
-        SceneManager.LoadScene("BootScene");
+        ScoreboardManager.Instance
+            .ResetAllData();
+
+        // 🔥 สร้าง guest account ใหม่
+        await AuthenticationService.Instance
+            .SignInAnonymouslyAsync();
+
+        Debug.Log("NEW GUEST ACCOUNT CREATED");
+
+        // 🔥 ไปหน้าเริ่ม
+        SceneManager.LoadScene("START");
+    }
+
+    public void CancelDelete()
+    {
+        confirmPanel.SetActive(false);
     }
 
     // =====================
@@ -91,4 +113,6 @@ public class ProfileUI : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+
+
 }

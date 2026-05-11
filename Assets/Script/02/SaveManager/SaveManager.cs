@@ -3,11 +3,27 @@ using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
-    string savePath;
+    public static SaveManager Instance;
+    string savePath =>
+    Path.Combine(
+        Application.persistentDataPath,
+        "save.json"
+    );
 
     void Awake()
     {
-        savePath = Path.Combine(Application.persistentDataPath, "save.json");
+        if (Instance == null)
+        {
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
         Debug.Log(savePath);
     }
 

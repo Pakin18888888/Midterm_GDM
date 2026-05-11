@@ -1,39 +1,74 @@
 using UnityEngine;
 using Unity.Services.Authentication;
+using System.Threading.Tasks;
 
 public class PlayerNameManager : MonoBehaviour
 {
     public static PlayerNameManager Instance;
 
-    const string PLAYER_NAME_KEY = "PLAYER_NAME";
+    const string NAME_KEY = "PLAYER_NAME";
+
+    string currentName;
 
     void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
+
+            currentName =
+                PlayerPrefs.GetString(NAME_KEY, "");
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    public async void SaveName(string newName)
+    public async void SaveName(string playerName)
     {
-        PlayerPrefs.SetString(PLAYER_NAME_KEY, newName);
+        currentName = playerName;
 
-        await UGSInitializer.InitTask;
-
-        await AuthenticationService.Instance.UpdatePlayerNameAsync(newName);
+        PlayerPrefs.SetString(
+            NAME_KEY,
+            playerName
+        );
 
         PlayerPrefs.Save();
-        Debug.Log("Name Updated");
+
+        await UpdateOnlineName(playerName);
+
+        Debug.Log("NAME SAVED : " + playerName);
     }
 
     public string GetName()
     {
-        return PlayerPrefs.GetString(
-            PLAYER_NAME_KEY,
-            "PLAYER"
-        );
+        return currentName;
     }
 
     public void DeleteName()
     {
-        PlayerPrefs.DeleteKey("PLAYER_NAME");
+        currentName = "";
+
+        PlayerPrefs.DeleteKey(NAME_KEY);
+
+        PlayerPrefs.Save();
+    }
+
+    public async Task UpdateOnlineName(string playerName)
+    {
+        try
+        {
+            await AuthenticationService.Instance
+                .UpdatePlayerNameAsync(playerName);
+
+            Debug.Log("ONLINE NAME UPDATED");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError(e.Message);
+        }
     }
 }

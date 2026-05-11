@@ -41,12 +41,29 @@ public class ScoreboardManager : MonoBehaviour
     void Awake()
     {
         // PlayerPrefs.DeleteAll();
-
-        saveManager = FindObjectOfType<SaveManager>();
-
         // saveManager.DeleteSave();
 
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
+        // 🔥 หลังจาก singleton พร้อมแล้ว
+        saveManager = FindObjectOfType<SaveManager>();
+
+        if (leaderboard == null)
+        {
+            leaderboard = new ScoreList();
+        }
+
+        
 
         GenerateFakeScores();
     }
@@ -176,13 +193,53 @@ public class ScoreboardManager : MonoBehaviour
     public void SaveOnlineLeaderboard(
     List<ScoreData> onlineScores)
     {
+        if (onlineScores == null)
+        {
+            Debug.LogError(
+                "ONLINE SCORES NULL"
+            );
+
+            return;
+        }
+
+        if (leaderboard == null)
+        {
+            leaderboard = new ScoreList();
+        }
+
         leaderboard.scores = onlineScores;
 
         string json =
             JsonUtility.ToJson(leaderboard);
 
-        saveManager.SaveJson(json);
+        if (saveManager != null)
+        {
+            saveManager.SaveJson(json);
+        }
+        else
+        {
+            Debug.LogError(
+                "SAVE MANAGER NULL"
+            );
+        }
 
         Debug.Log("Online Leaderboard Saved");
+    }
+
+    public void ResetAllData()
+    {
+        // 🔥 ลบ PlayerPrefs
+        PlayerPrefs.DeleteAll();
+
+        // 🔥 ลบ save json
+        if (saveManager != null)
+        {
+            saveManager.DeleteSave();
+        }
+
+        // 🔥 reset leaderboard
+        leaderboard = new ScoreList();
+
+        Debug.Log("ALL DATA RESET");
     }
 }
