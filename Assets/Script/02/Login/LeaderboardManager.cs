@@ -105,16 +105,16 @@ public class LeaderboardManager : MonoBehaviour
                 result.Add(data);
             }
 
-            foreach (var bot in fakeScores)
-            {
-                ScoreboardManager.ScoreData data =
-                    new ScoreboardManager.ScoreData();
+            // foreach (var bot in fakeScores)
+            // {
+            //     ScoreboardManager.ScoreData data =
+            //         new ScoreboardManager.ScoreData();
 
-                data.name = bot.name;
-                data.score = bot.score;
+            //     data.name = bot.name;
+            //     data.score = bot.score;
 
-                result.Add(data);
-            }
+            //     result.Add(data);
+            // }
 
             result.Sort((a, b) => b.score.CompareTo(a.score));
 
