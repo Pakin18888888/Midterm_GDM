@@ -194,4 +194,21 @@ public class PlayerMovements : MonoBehaviour
         targetY = bottomY;
         isTopLane = false;
     }
+
+    public bool IsTopLane()
+    {
+        return isTopLane;
+    }
+
+    public void ToggleLane()
+    {
+        if (isTopLane)
+        {
+            GoBottomLane();
+        }
+        else
+        {
+            GoTopLane();
+        }
+    }
 }

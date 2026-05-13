@@ -226,6 +226,7 @@ Assets/
    PlayerCombats.cs
    PlayerEffect.cs
    PlayerHealths.cs
+   PlayerInputs.cs
    PlayerJump.cs
    PlayerLaneController.cs
    PlayerLaneSwitchers.cs
