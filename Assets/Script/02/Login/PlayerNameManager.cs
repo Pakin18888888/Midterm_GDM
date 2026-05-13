@@ -27,7 +27,7 @@ public class PlayerNameManager : MonoBehaviour
         }
     }
 
-    public async void SaveName(string playerName)
+    public async Task SaveName(string playerName)
     {
         currentName = playerName;
 

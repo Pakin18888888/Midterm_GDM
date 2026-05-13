@@ -249,6 +249,7 @@ Assets/
    LeaderboardRowUI.cs
    LeaderboardUI.cs
    MainMenuUI.cs
+   MobileKeyboardUIFix.cs
    NameSetupUI.cs
    ProfileUI.cs
    ScoreTween.cs
