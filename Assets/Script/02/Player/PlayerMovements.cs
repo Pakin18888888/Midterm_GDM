@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerMovements : MonoBehaviour
 {
     public float speed = 5f;
-    public float moveSpeed = 10f;
+    public float moveSpeed = 25f;
 
     public float bottomY = -3.827f;
     public float topY = 0.2f;
@@ -69,14 +69,17 @@ public class PlayerMovements : MonoBehaviour
         //     isTopLane = !isTopLane;
         //     targetY = isTopLane ? topY : bottomY;
         // }
-
-        float newY = Mathf.Lerp(transform.position.y, targetY, moveSpeed * Time.deltaTime);
-
-        // 🔥 ถ้าใกล้แล้ว → ล็อกเลย
-        if (Mathf.Abs(transform.position.y - targetY) < 0.01f)
+        if (GameManagers.Instance.stage == 1)
         {
-            newY = targetY;
+            targetY = bottomY;
+            isTopLane = false;
         }
+
+        float newY = Mathf.MoveTowards(
+            transform.position.y,
+            targetY,
+            moveSpeed * Time.deltaTime
+        );
 
         transform.position = new Vector3(
             transform.position.x + speed * Time.deltaTime,
@@ -186,12 +189,40 @@ public class PlayerMovements : MonoBehaviour
     public void GoTopLane()
     {
         targetY = topY;
-        isTopLane = true;
-    }
 
+        StartCoroutine(
+            PlayerPolaritys.Instance
+            .LaneSwitchRoutine()
+        );
+
+        StartCoroutine(
+            SwitchToTopRoutine()
+        );
+    }
     public void GoBottomLane()
     {
         targetY = bottomY;
+
+        StartCoroutine(
+            PlayerPolaritys.Instance
+            .LaneSwitchRoutine()
+        );
+
+        StartCoroutine(
+            SwitchToBottomRoutine()
+        );
+    }
+    IEnumerator SwitchToTopRoutine()
+    {
+        yield return new WaitForSeconds(0.15f);
+
+        isTopLane = true;
+    }
+
+    IEnumerator SwitchToBottomRoutine()
+    {
+        yield return new WaitForSeconds(0.15f);
+
         isTopLane = false;
     }
 
@@ -202,6 +233,10 @@ public class PlayerMovements : MonoBehaviour
 
     public void ToggleLane()
     {
+        // Stage 1 ห้ามขึ้นเลนบน
+        if (GameManagers.Instance.stage == 1)
+            return;
+
         if (isTopLane)
         {
             GoBottomLane();

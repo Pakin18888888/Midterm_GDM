@@ -9,6 +9,9 @@ public class LaneVisuals : MonoBehaviour
     public Color negativeColor =
         new Color(0f, 0.5f, 1f, 0.9f);
 
+    public Color neutralColor =
+        new Color(0.7f, 0.7f, 0.7f, 0.9f);
+
     LanePolarity polarity;
 
     SpriteRenderer glowRenderer;
@@ -138,20 +141,46 @@ public class LaneVisuals : MonoBehaviour
     {
         if (polarity == null) return;
 
-        Color targetColor =
-            polarity.lanePolarity ==
-            PolarityType.Positive
-            ? positiveColor
-            : negativeColor;
+        Color targetColor;
+
+        // ด่านพัก
+        ChunkData data = GetComponent<ChunkData>();
+
+        bool usePolarity = true;
+
+        if (data != null)
+        {
+            usePolarity = data.usePolarity;
+        }
+
+        if (!usePolarity)
+        {
+            targetColor = neutralColor;
+        }
+        else
+        {
+            targetColor =
+                polarity.lanePolarity ==
+                PolarityType.Positive
+                ? positiveColor
+                : negativeColor;
+        }
+
+        // ===== Glow =====
 
         if (glowLight != null)
         {
             glowLight.color = targetColor;
         }
+
+        // ===== Line =====
+
         if (lineRenderer != null)
         {
             lineRenderer.color = targetColor;
         }
+
+        // ===== Particles =====
 
         if (particles != null)
         {

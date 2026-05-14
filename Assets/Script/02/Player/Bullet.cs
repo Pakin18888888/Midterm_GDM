@@ -37,7 +37,7 @@ public class Bullet : MonoBehaviour
 
         if (enemyPol != null && hp != null)
         {
-            if (enemyPol.polarity != polarity)
+            if (!GameManagers.Instance.usePolarity || enemyPol.polarity != polarity)
             {
                 // ✔ ยิงถูก
                 hp.TakeDamage(2);

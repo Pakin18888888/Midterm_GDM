@@ -115,9 +115,6 @@ Assets/Cainos/Third Party/Lucid Editor/Editor/
   ProcessorUtil.cs
   ReflectionUtil.cs
   TypeUtil.cs
-Assets/Editor/
- PlayFromFirstScene.cs
- PlayFromFirstScene_Off.cs
 Assets/LeanTween/Editor/LeanTweenDocumentationEditor.cs
 Temp/obj/Assembly-CSharp-Editor/.NETStandard,Version=v2.1.AssemblyAttributes.cs
 
@@ -395,6 +392,9 @@ Temp/obj/Assembly-CSharp-Editor/.NETStandard,Version=v2.1.AssemblyAttributes.cs
   System.Transactions.dll
   System.Xml.dll
   System.Xml.Linq.dll
+Assets/MobileDependencyResolver/Editor/
+ 1.2.185/Google.VersionHandlerImpl.dll
+ Google.VersionHandler.dll
 Library/PackageCache/com.unity.collab-proxy@1ec4e416a4af/Lib/Editor/
  log4netPlastic.dll
  Unity.Plastic.Antlr3.Runtime.dll
@@ -442,6 +442,7 @@ Library/ScriptAssemblies/
  Unity.InternalAPIEditorBridge.001.dll
  Unity.InternalAPIEngineBridge.001.dll
  Unity.InternalAPIEngineBridge.004.dll
+ Unity.LevelPlay.dll
  Unity.Mathematics.dll
  Unity.Mathematics.Editor.dll
  Unity.Multiplayer.Center.Common.dll

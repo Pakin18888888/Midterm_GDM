@@ -26,6 +26,9 @@ public class GameManagers : MonoBehaviour
     public PolarityType bottomLanePolarity;
     private Vector3 leaderboardOriginalScale;
 
+    public bool isRestStage;
+    public bool usePolarity = true;
+
     void Awake()
     {
         Instance = this;
@@ -34,7 +37,7 @@ public class GameManagers : MonoBehaviour
     {
         gameOverUI.SetActive(false);
 
-        UpdateLanePolarity();
+        UpdateStageMode();
 
         Debug.Log("HighScore: " + ScoreboardManager.Instance.GetHighScore());
 
@@ -59,11 +62,20 @@ public class GameManagers : MonoBehaviour
         else if (gameTime < 180f) stage = 7;
         else if (gameTime < 230f) stage = 8;
         else if (gameTime < 280f) stage = 9;
-        else stage = 10;
+        else
+        {
+            stage = 10 + Mathf.FloorToInt((gameTime - 280f) / 60f);
+        }
 
         if (oldStage != stage)
         {
-            UpdateLanePolarity();
+            UpdateStageMode();
+
+            StageUI.Instance.ShowStage(stage, isRestStage);
+
+            PlayerPolaritys.Instance.SendMessage(
+                "ApplyVisual"
+            );
         }
 
         difficulty = 1f + gameTime * 0.05f;
@@ -81,7 +93,7 @@ public class GameManagers : MonoBehaviour
 
     public bool CanSpawnEnemy()
     {
-        return gameTime >= 15f;
+        return stage >= 2;
     }
 
     public void GameOver()
@@ -172,32 +184,28 @@ public class GameManagers : MonoBehaviour
 
         Debug.Log("Sync Complete");
     }
-
-    void UpdateLanePolarity()
-    {
-        bool flip = stage % 2 == 0;
-
-        if (flip)
-        {
-            topLanePolarity = PolarityType.Positive;
-            bottomLanePolarity = PolarityType.Negative;
-        }
-        else
-        {
-            topLanePolarity = PolarityType.Negative;
-            bottomLanePolarity = PolarityType.Positive;
-        }
-
-        Debug.Log(
-            "Top: " + topLanePolarity +
-            " Bottom: " + bottomLanePolarity
-        );
-    }
-
+    
     public void BackToMenu()
     {
         Time.timeScale = 1f;
 
         SceneManager.LoadScene("MainMenuScene");
+    }
+
+    void UpdateStageMode()
+    {
+        // ทุกด่านที่หาร 6 ลงตัว = ด่านพัก
+        // เช่น 6,12,18
+
+        isRestStage = stage % 6 == 0;
+
+        // ด่านพักปิด polarity
+        usePolarity = !isRestStage;
+
+        Debug.Log(
+            "Stage: " + stage +
+            " Rest: " + isRestStage +
+            " UsePolarity: " + usePolarity
+        );
     }
 }

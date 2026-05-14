@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections;
 
 public class PlayerPolaritys : MonoBehaviour
 {
@@ -10,7 +11,9 @@ public class PlayerPolaritys : MonoBehaviour
     public Action<PolarityType> OnPolarityChanged;
 
     public SpriteRenderer sr;
-
+    ChunkData currentChunk;
+    float laneSwitchCooldown = 0f;
+    bool isSwitchingLane = false;
     PlayerMovements movement;
 
     void Awake()
@@ -26,6 +29,71 @@ public class PlayerPolaritys : MonoBehaviour
         ApplyVisual();
     }
 
+    void Update()
+    {
+        if (!GameManagers.Instance.usePolarity)
+            return;
+
+        laneSwitchCooldown -= Time.deltaTime;
+
+        if (laneSwitchCooldown > 0f)
+            return;
+
+        // 🔥 ต้องเช็คก่อน
+        if (isSwitchingLane)
+            return;
+
+        CheckLanePolarity();
+    }
+
+    void CheckLanePolarity()
+    {
+        if (movement == null)
+            return;
+
+        LanePolarity[] lanes =
+            FindObjectsOfType<LanePolarity>();
+
+        foreach (LanePolarity lane in lanes)
+        {
+            // เอาเฉพาะ lane ใกล้ player
+            if (Mathf.Abs(
+                lane.transform.position.x
+                - transform.position.x
+            ) > 3f)
+            {
+                continue;
+            }
+
+            // ===== player อยู่เลนบน =====
+
+            if (movement.IsTopLane())
+            {
+                if (lane.transform.position.y < 0)
+                    continue;
+            }
+
+            // ===== player อยู่เลนล่าง =====
+
+            else
+            {
+                if (lane.transform.position.y > 0)
+                    continue;
+            }
+
+            // ===== polarity ชน =====
+
+            if (lane.lanePolarity
+                == currentPolarity)
+            {
+                RejectFromLane(
+                    lane.lanePolarity
+                );
+            }
+
+            break;
+        }
+    }
     public void SwitchPolarity()
     {
         currentPolarity =
@@ -40,29 +108,32 @@ public class PlayerPolaritys : MonoBehaviour
 
     void ApplyVisual()
     {
+        // ด่านพัก
+        if (!GameManagers.Instance.usePolarity)
+        {
+            sr.color = Color.white;
+            return;
+        }
+
         sr.color =
             currentPolarity == PolarityType.Positive
             ? Color.red
             : Color.blue;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    public IEnumerator LaneSwitchRoutine()
     {
-        LanePolarity lane = other.GetComponent<LanePolarity>();
+        isSwitchingLane = true;
 
-        if (lane == null) return;
+        yield return new WaitForSeconds(0.35f);
 
-        // ❌ ขั้วเหมือนกัน
-        if (lane.lanePolarity == currentPolarity)
-        {
-            RejectFromLane(lane.lanePolarity);
-        }
+        isSwitchingLane = false;
     }
-
     void RejectFromLane(PolarityType laneType)
     {
-        // ถ้าโดนผลักจากเลนบน → กลับล่าง
-        if (laneType == PolarityType.Positive)
+        laneSwitchCooldown = 0.8f;
+
+        if (movement.IsTopLane())
         {
             movement.GoBottomLane();
         }

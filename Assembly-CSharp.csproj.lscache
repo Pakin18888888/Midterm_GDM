@@ -191,6 +191,7 @@ Assets/
  Script/02/
   CameraShake.cs
   Enemy/
+   EnemyAutoDestroy.cs
    EnemyCombat.cs
    EnemyControllers.cs
    EnemyHealths.cs
@@ -220,6 +221,9 @@ Assets/
    EnemySpawners.cs
    ItemSpawner.cs
    MapManager.cs
+   ObstacleAutoDestroy.cs
+   ObstaclePenalty.cs
+   ObstacleSpawner.cs
   Player/
    Bullet.cs
    PlayerAnimationDrivers.cs
@@ -254,8 +258,12 @@ Assets/
    NameSetupUI.cs
    ProfileUI.cs
    ScoreTween.cs
+   ScoreUI.cs
+   ScreenFlash.cs
+   StageUI.cs
    StartButton.cs
    StreakBarUI.cs
+   StreakUI.cs
    UIManager.cs
  TextMesh Pro/Examples & Extras/Scripts/
   Benchmark01.cs
@@ -597,6 +605,7 @@ Library/ScriptAssemblies/
  Unity.InternalAPIEditorBridge.001.dll
  Unity.InternalAPIEngineBridge.001.dll
  Unity.InternalAPIEngineBridge.004.dll
+ Unity.LevelPlay.dll
  Unity.Mathematics.dll
  Unity.Mathematics.Editor.dll
  Unity.Multiplayer.Center.Common.dll

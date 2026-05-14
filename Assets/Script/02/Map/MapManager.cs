@@ -31,6 +31,9 @@ public class MapManager : MonoBehaviour
     private float spawnX = 0;
     bool hasSpawnedThisStage = false;
 
+    float nextWaveTime = 0f;
+    bool waveActive = false;
+
     public enum ChunkType
     {
         Coin,
@@ -74,35 +77,78 @@ public class MapManager : MonoBehaviour
 
         bool canSpawn = Time.time - lastSpawnTime >= spawnCooldown;
 
+        if (Time.time >= nextWaveTime)
+        {
+            SpawnEnemyWave();
+        }
+    }
+
+    void SpawnEnemyWave()
+    {
+        if (!GameManagers.Instance.CanSpawnEnemy())
+            return;
+
+        if (GameManagers.Instance.isRestStage)
+            return;
+
+        if (!GameManagers.Instance.usePolarity)
+            return;
+
+        waveActive = true;
+
+        nextWaveTime =
+            Time.time + Random.Range(5f, 9f);
+
+        // หา chunk ข้างหน้า player
         foreach (GameObject chunk in chunks)
         {
-            if (chunk == null) continue;
-
-            ChunkData data = chunk.GetComponent<ChunkData>();
-            if (data == null) continue;
-
-            if (data.hasSpawnedEnemy) continue;
-
-            if (data.chunkType != ChunkType.Enemy && data.chunkType != ChunkType.Mix)
+            if (chunk == null)
                 continue;
 
-            float spawnDistance = 15f;
+            float distance =
+                chunk.transform.position.x
+                - player.position.x;
 
-            if (player.position.x > chunk.transform.position.x - spawnDistance)
+            if (distance < 15f || distance > 25f)
+                continue;
+
+            EnemySpawner[] spawners =
+                chunk.GetComponentsInChildren<EnemySpawner>();
+
+            // ===== Stage 1-4 =====
+            // spawn lane เดียว
+            if (currentStage < 5)
             {
-                if (!canSpawn)
-                    break;
-                EnemySpawner spawner = chunk.GetComponentInChildren<EnemySpawner>();
+                bool spawnTopLane =
+                    Random.value > 0.5f;
 
-                if (spawner != null)
+                foreach (EnemySpawner spawner in spawners)
                 {
-                    spawner.Spawn();
-                    data.hasSpawnedEnemy = true;
-
-                    lastSpawnTime = Time.time; // 🔥 สำคัญ
-                    break; // 🔥 ตัวนี้สำคัญมาก!!!
+                    if (spawner != null)
+                    {
+                        spawner.Spawn(spawnTopLane);
+                    }
                 }
             }
+
+            // ===== Stage 5+ =====
+            // spawn ทั้งบน+ล่าง
+            else
+            {
+                foreach (EnemySpawner spawner in spawners)
+                {
+                    if (spawner != null)
+                    {
+                        // ล่าง
+                        spawner.Spawn(false);
+
+                        // บน
+                        spawner.Spawn(true);
+                    }
+                }
+            }
+
+            break;
         }
     }
     ChunkType GetRandomChunkType()
@@ -138,19 +184,58 @@ public class MapManager : MonoBehaviour
         return bottomPrefabs[index];
     }
     int chunkSpawnedCount = 0;
+
     void SpawnChunk()
     {
         chunkSpawnedCount++;
 
         currentChunkType = GetRandomChunkType();
 
-        if (currentStage >= 2 && Random.value < 0.6f)
+        // ===== polarity ของ chunk นี้ =====
+
+        int chunkStage = GameManagers.Instance.stage;
+
+        bool flip = chunkStage % 2 == 0;
+
+        PolarityType topPolarity;
+        PolarityType bottomPolarity;
+
+        if (flip)
         {
-            currentChunkType = ChunkType.Enemy;
+            topPolarity = PolarityType.Positive;
+            bottomPolarity = PolarityType.Negative;
+        }
+        else
+        {
+            topPolarity = PolarityType.Negative;
+            bottomPolarity = PolarityType.Positive;
         }
 
-        GameObject mainPrefab = GetChunkPrefabByType(currentChunkType);
-        GameObject bottomPrefab = GetBottomPrefab();
+        // ===== enemy chance =====
+
+        if (chunkStage >= 2)
+        {
+            float enemyChance = Mathf.Clamp(
+                chunkStage * 0.08f,
+                0.15f,
+                0.45f
+            );
+
+            if (Random.value < enemyChance)
+            {
+                currentChunkType = ChunkType.Enemy;
+            }
+        }
+
+        GameObject mainPrefab =
+            GetChunkPrefabByType(currentChunkType);
+
+        GameObject bottomPrefab =
+            GetBottomPrefab();
+
+        // =====================================================
+        // ================= BOTTOM ============================
+        // =====================================================
 
         GameObject bottom = Instantiate(
             mainPrefab,
@@ -158,59 +243,87 @@ public class MapManager : MonoBehaviour
             Quaternion.identity
         );
 
-        LanePolarity bottomPol = bottom.AddComponent<LanePolarity>();
-        bottomPol.lanePolarity = GameManagers.Instance.bottomLanePolarity;
+        LanePolarity bottomLane =
+            bottom.AddComponent<LanePolarity>();
 
-        LaneVisuals bottomVisual = bottom.AddComponent<LaneVisuals>();
-        bottomVisual.particleMaterial = particleMaterial;
+        bottomLane.lanePolarity =
+            bottomPolarity;
 
-        SpriteRenderer sr = bottom.GetComponent<SpriteRenderer>();
+        bottomLane.stage = chunkStage;
+        LaneVisuals bottomVisual =
+            bottom.AddComponent<LaneVisuals>();
+
+        bottomVisual.particleMaterial =
+            particleMaterial;
+
+        SpriteRenderer sr =
+            bottom.GetComponent<SpriteRenderer>();
+
         if (sr != null)
         {
-            int index = (currentStage - 1) % groundSprites.Length;
-            sr.sprite = groundSprites[index];
+            int index =
+                (currentStage - 1)
+                % groundSprites.Length;
+
+            sr.sprite =
+                groundSprites[index];
         }
 
-        ChunkData data = bottom.AddComponent<ChunkData>();
-        data.chunkType = currentChunkType;
+        ChunkData data =
+            bottom.AddComponent<ChunkData>();
+
+        data.usePolarity =
+            GameManagers.Instance.usePolarity;
+
+        data.topPolarity =
+            topPolarity;
+
+        data.bottomPolarity =
+            bottomPolarity;
+
+        data.chunkType =
+            currentChunkType;
+
+        data.stage = chunkStage;
 
         chunks.Add(bottom);
 
+        // =====================================================
+        // =============== EXTRA BOTTOM ========================
+        // =====================================================
 
-        // 🔻 พื้นล่างเพิ่ม (ต่ำลงไปอีก)
         for (int i = 1; i <= extraLayers; i++)
         {
             GameObject extraBottom = Instantiate(
                 bottomPrefab,
                 new Vector3(
                     spawnX,
-                    bottomY - (layerSpacing * i), // 🔥 ลงทีละชั้น
+                    bottomY - (layerSpacing * i),
                     0
                 ),
                 Quaternion.identity
             );
-            SpriteRenderer sr2 = extraBottom.GetComponent<SpriteRenderer>();
+
+            SpriteRenderer sr2 =
+                extraBottom.GetComponent<SpriteRenderer>();
 
             if (sr2 != null)
             {
-                int index = (currentStage - 1) % bottomSprites.Length;
-                sr2.sprite = bottomSprites[index];
+                int index =
+                    (currentStage - 1)
+                    % bottomSprites.Length;
+
+                sr2.sprite =
+                    bottomSprites[index];
             }
 
             chunks.Add(extraBottom);
         }
 
-        // ItemSpawner bottomSpawner = bottom.GetComponentInChildren<ItemSpawner>();
-        // if (bottomSpawner != null)
-        // {
-        //     bottomSpawner.isTopLane = false;
-        // }
-        EnemySpawner bottomEnemy = bottom.GetComponentInChildren<EnemySpawner>();
-        if (bottomEnemy != null)
-        {
-            bottomEnemy.isTopLane = false;
-        }
-        // 🔺 พื้นบน (ด่าน 2)
+        // =====================================================
+        // ==================== TOP ============================
+        // =====================================================
+
         if (currentStage >= 2)
         {
             GameObject top = Instantiate(
@@ -218,61 +331,92 @@ public class MapManager : MonoBehaviour
                 new Vector3(spawnX, topY, 0),
                 Quaternion.Euler(0, 0, 180)
             );
-            SpriteRenderer srTop = top.GetComponent<SpriteRenderer>();
+
+            SpriteRenderer srTop =
+                top.GetComponent<SpriteRenderer>();
 
             if (srTop != null)
             {
-                int index = (currentStage - 1) % groundSprites.Length;
-                srTop.sprite = groundSprites[index];
+                int index =
+                    (currentStage - 1)
+                    % groundSprites.Length;
+
+                srTop.sprite =
+                    groundSprites[index];
             }
-            LanePolarity topPol = top.AddComponent<LanePolarity>();
-            topPol.lanePolarity = GameManagers.Instance.topLanePolarity;
 
-            LaneVisuals topVisual = top.AddComponent<LaneVisuals>();
-            topVisual.particleMaterial = particleMaterial;
+            LanePolarity topLane =
+                top.AddComponent<LanePolarity>();
 
-            ChunkData topData = top.AddComponent<ChunkData>();
-            topData.chunkType = currentChunkType;
+            topLane.lanePolarity =
+                topPolarity;
 
-            topData.spawnStage = GameManagers.Instance.stage;
+            topLane.stage = chunkStage;
+
+            LaneVisuals topVisual =
+                top.AddComponent<LaneVisuals>();
+
+            topVisual.particleMaterial =
+                particleMaterial;
+
+            ChunkData topData =
+                top.AddComponent<ChunkData>();
+
+            topData.usePolarity =
+                GameManagers.Instance.usePolarity;
+
+            topData.topPolarity =
+                topPolarity;
+
+            topData.bottomPolarity =
+                bottomPolarity;
+
+            topData.chunkType =
+                currentChunkType;
+
+            topData.stage =
+                chunkStage;
+
+            topData.spawnStage =
+                GameManagers.Instance.stage;
+
             chunks.Add(top);
 
-            // ItemSpawner topSpawner = top.GetComponentInChildren<ItemSpawner>();
-            // if (topSpawner != null)
-            // {
-            //     topSpawner.isTopLane = true;
-            // }
-
-            EnemySpawner topEnemy = top.GetComponentInChildren<EnemySpawner>();
-            if (topEnemy != null)
-            {
-                topEnemy.isTopLane = true;
-            }
+            // =================================================
+            // ============== EXTRA TOP ========================
+            // =================================================
 
             for (int i = 1; i <= extraLayers; i++)
             {
-                GameObject extratop = Instantiate(
-                bottomPrefab,
-                new Vector3(
-                    spawnX,
-                    topY + (layerSpacing * i), 0),
-                Quaternion.identity
-            );
-                SpriteRenderer srTop2 = extratop.GetComponent<SpriteRenderer>();
+                GameObject extraTop = Instantiate(
+                    bottomPrefab,
+                    new Vector3(
+                        spawnX,
+                        topY + (layerSpacing * i),
+                        0
+                    ),
+                    Quaternion.identity
+                );
+
+                SpriteRenderer srTop2 =
+                    extraTop.GetComponent<SpriteRenderer>();
+
                 if (srTop2 != null)
                 {
-                    int index = (currentStage - 1) % bottomSprites.Length;
-                    srTop2.sprite = bottomSprites[index];
+                    int index =
+                        (currentStage - 1)
+                        % bottomSprites.Length;
+
+                    srTop2.sprite =
+                        bottomSprites[index];
                 }
-                chunks.Add(extratop);
 
+                chunks.Add(extraTop);
             }
-
         }
 
         spawnX += chunkLength;
     }
-
     void DeleteChunk()
     {
         float deleteX = player.position.x - (chunkLength * keepChunksBehind);
