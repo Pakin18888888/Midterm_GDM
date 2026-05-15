@@ -644,7 +644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnityAdsManager
   androidGameId: 6115858
   interstitialAdId: Interstitial_Android
-  testMode: 1
+  testMode: 0
 --- !u!1 &1610899856
 GameObject:
   m_ObjectHideFlags: 0
