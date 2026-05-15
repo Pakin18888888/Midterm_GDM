@@ -597,7 +597,6 @@ Library/ScriptAssemblies/
  Unity.InternalAPIEditorBridge.001.dll
  Unity.InternalAPIEngineBridge.001.dll
  Unity.InternalAPIEngineBridge.004.dll
- Unity.LevelPlay.dll
  Unity.Mathematics.dll
  Unity.Mathematics.Editor.dll
  Unity.Mobile.AndroidLogcat.Editor.dll
