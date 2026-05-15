@@ -6,13 +6,8 @@ apply from: '../shared/common.gradle'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'com.google.android.gms:play-services-ads:25.2.0' // Assets/LevelPlay/Editor/ISAdMobAdapterDependencies.xml:8
-    implementation 'com.google.android.gms:play-services-ads-identifier:18.1.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:12
     // implementation 'com.unity3d.ads:unity-ads:[4.17.0,4.18[' // Packages/com.unity.ads/Editor/Source/Dependencies.xml:7
     implementation 'com.unity3d.ads:unity-ads:4.18.0' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:9
-    implementation 'com.unity3d.ads-mediation:admob-adapter:5.8.0' // Assets/LevelPlay/Editor/ISAdMobAdapterDependencies.xml:12
-    implementation 'com.unity3d.ads-mediation:mediation-sdk:9.4.2' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:5
-    implementation 'com.unity3d.ads-mediation:unityads-adapter:5.7.0' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:5
 // Android Resolver Dependencies End
 **DEPS**}
 
@@ -30,6 +25,30 @@ android {
 // Android Resolver Exclusions End
 android {
     namespace "com.unity3d.player"
+
+    packaging {
+    resources {
+
+        excludes += [
+            "META-INF/DEPENDENCIES",
+            "META-INF/LICENSE",
+            "META-INF/LICENSE.txt",
+            "META-INF/license.txt",
+            "META-INF/NOTICE",
+            "META-INF/NOTICE.txt",
+            "META-INF/notice.txt",
+            "META-INF/ASL2.0",
+            "META-INF/*.kotlin_module"
+        ]
+
+        pickFirsts += [
+            "**/libc++_shared.so",
+            "**/*.proto",
+            "META-INF/*"
+        ]
+    }
+}
+
     ndkPath "**NDKPATH**"
     ndkVersion "**NDKVERSION**"
 
