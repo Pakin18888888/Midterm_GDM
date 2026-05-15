@@ -28,6 +28,8 @@ public class LevelPlayInitializer : MonoBehaviour
         IsInitialized = true;
         Debug.Log("[LevelPlay] SDK initialized successfully.");
 
+        LevelPlay.LaunchTestSuite();
+
         // Create Banner / Interstitial / Rewarded objects after this point
         if (interstitialAdController != null)
         {
