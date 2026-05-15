@@ -186,13 +186,13 @@ public class GameManagers : MonoBehaviour
 
         Debug.Log("Sync Complete");
     }
-    
+
     public void BackToMenu()
     {
         Time.timeScale = 1f;
-        if (interstitialAdController != null)
+        if (InterstitialAdController.Instance != null)
         {
-            interstitialAdController.ShowInterstitial(() =>
+            InterstitialAdController.Instance.ShowInterstitial(() =>
             {
                 SceneManager.LoadScene("MainMenuScene");
             });

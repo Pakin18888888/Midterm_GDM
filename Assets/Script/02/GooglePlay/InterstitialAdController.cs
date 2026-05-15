@@ -4,6 +4,20 @@ using System;
 
 public class InterstitialAdController : MonoBehaviour
 {
+    public static InterstitialAdController Instance;
+
+    void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
+        DontDestroyOnLoad(gameObject);
+    }
     [SerializeField] private string interstitialAdUnitId = "YOUR_INTERSTITIAL_AD_UNIT_ID";
 
     private LevelPlayInterstitialAd interstitialAd;

@@ -18,6 +18,10 @@ public class LevelPlayInitializer : MonoBehaviour
         LevelPlay.Init(appKey);
     }
 
+    private void Awake() {
+        DontDestroyOnLoad(gameObject);
+    }
+
 
     private void OnInitSuccess(LevelPlayConfiguration configuration)
     {
