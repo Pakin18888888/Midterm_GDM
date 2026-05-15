@@ -15,6 +15,8 @@ public class LevelPlayInitializer : MonoBehaviour
         LevelPlay.OnInitSuccess += OnInitSuccess;
         LevelPlay.OnInitFailed += OnInitFailed;
 
+        LevelPlay.SetMetaData("is_test_suite", "enable");
+
         LevelPlay.Init(appKey);
     }
 
@@ -30,8 +32,6 @@ public class LevelPlayInitializer : MonoBehaviour
 
         Debug.Log("[LevelPlay] SDK initialized successfully.");
 
-        LevelPlay.SetMetaData("is_test_suite", "enable");
-
         LevelPlay.LaunchTestSuite();
 
         if (interstitialAdController != null)
@@ -39,7 +39,7 @@ public class LevelPlayInitializer : MonoBehaviour
             interstitialAdController.InitializeInterstitial();
             interstitialAdController.LoadInterstitial();
         }
-    }   
+    }
 
     private void OnInitFailed(LevelPlayInitError error)
     {
