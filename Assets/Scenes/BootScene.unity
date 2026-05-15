@@ -599,7 +599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67ca0bf8460bb9a4abae78ab1f6d42a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InterstitialAdController
-  interstitialAdUnitId: ca-app-pub-6365081232644635/6094644405
+  interstitialAdUnitId: smjp2fyczvdprtbi
 --- !u!114 &1464869470
 MonoBehaviour:
   m_ObjectHideFlags: 0
