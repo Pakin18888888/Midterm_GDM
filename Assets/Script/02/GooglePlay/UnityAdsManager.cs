@@ -99,14 +99,16 @@ public class UnityAdsManager : MonoBehaviour,
         Debug.Log("Ad Clicked");
     }
 
-    public void OnUnityAdsShowComplete(string adUnitId,
-        UnityAdsShowCompletionState showCompletionState)
+    public void OnUnityAdsShowComplete(
+    string adUnitId,
+    UnityAdsShowCompletionState state)
     {
         Debug.Log("Ad Closed");
 
         adLoaded = false;
 
         Advertisement.Load(interstitialAdId, this);
+
         onAdClosed?.Invoke();
     }
 
