@@ -191,10 +191,7 @@ Assets/
    AuthManager.cs
    BootManager.cs
    GameManagers.cs
-  GooglePlay/
-   InterstitialAdController.cs
-   LevelPlayInitializer.cs
-   UnityAdsManager.cs
+  GooglePlay/UnityAdsManager.cs
   Item/
    CoinLineSpawner.cs
    ComboEffect.cs

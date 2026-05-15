@@ -37,6 +37,7 @@ public class UnityAdsManager : MonoBehaviour,
     public void OnInitializationComplete()
     {
         Debug.Log("Unity Ads Initialized");
+        Debug.Log("UNITY ADS INIT SUCCESS");
 
         Advertisement.Load(interstitialAdId, this);
     }
@@ -116,5 +117,19 @@ public class UnityAdsManager : MonoBehaviour,
         string message)
     {
         Debug.LogError($"Init Failed: {error} - {message}");
+        Debug.Log("INIT FAILED: " + error + " " + message);
     }
+
+    public void Initialize()
+{
+    Debug.Log("START INIT UNITY ADS");
+
+    if (Advertisement.isSupported)
+    {
+        Debug.Log(Application.platform + " supported by Advertisement");
+    }
+
+    Advertisement.Initialize(androidGameId, testMode, this);
+}
+
 }
