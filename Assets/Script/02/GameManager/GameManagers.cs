@@ -204,14 +204,14 @@ public class GameManagers : MonoBehaviour
 
         if (UnityAdsManager.Instance != null)
         {
+            Debug.Log("Requesting Interstitial Ad...");
+
             UnityAdsManager.Instance.ShowAd(() =>
             {
+                Debug.Log("Loading MainMenuScene");
+
                 SceneManager.LoadScene("MainMenuScene");
             });
-        }
-        else
-        {
-            SceneManager.LoadScene("MainMenuScene");
         }
 
     }

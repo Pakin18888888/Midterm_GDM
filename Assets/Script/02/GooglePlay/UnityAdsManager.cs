@@ -40,7 +40,6 @@ public class UnityAdsManager : MonoBehaviour,
 
         Advertisement.Load(interstitialAdId, this);
     }
-
     public void ShowAd(Action callback = null)
     {
         onAdClosed = callback;
@@ -72,6 +71,15 @@ public class UnityAdsManager : MonoBehaviour,
         string message)
     {
         Debug.LogError($"Load Failed: {error} - {message}");
+
+        Invoke(nameof(RetryLoadAd), 5f);
+    }
+
+    void RetryLoadAd()
+    {
+        Debug.Log("Retrying Ad Load...");
+
+        Advertisement.Load(interstitialAdId, this);
     }
 
     public void OnUnityAdsShowFailure(string adUnitId,
