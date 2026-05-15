@@ -9,7 +9,7 @@ public class UnityAdsManager : MonoBehaviour,
 {
     [SerializeField] private string androidGameId = "6115858";
     [SerializeField] private string interstitialAdId = "Interstitial_Android";
-    [SerializeField] private bool testMode = true;
+    [SerializeField] private bool testMode = false;
     private Action onAdClosed;
     public static UnityAdsManager Instance;
 
@@ -44,6 +44,9 @@ public class UnityAdsManager : MonoBehaviour,
     public void ShowAd(Action callback = null)
     {
         onAdClosed = callback;
+
+        Debug.Log("Trying to show ad...");
+        Debug.Log("Ad Loaded State: " + adLoaded);
 
         if (adLoaded)
         {
