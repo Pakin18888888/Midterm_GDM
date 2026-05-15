@@ -1,58 +1,58 @@
-using UnityEngine;
-using Unity.Services.LevelPlay;
+// using UnityEngine;
+// using Unity.Services.LevelPlay;
 
-public class LevelPlayInitializer : MonoBehaviour
-{
-    [SerializeField] private string appKey = "25a05013d";
-    [SerializeField] private InterstitialAdController interstitialAdController;
+// public class LevelPlayInitializer : MonoBehaviour
+// {
+//     [SerializeField] private string appKey = "25a05013d";
+//     [SerializeField] private InterstitialAdController interstitialAdController;
 
-    public static bool IsInitialized { get; private set; }
+//     public static bool IsInitialized { get; private set; }
 
-    private void Start()
-    {
-        Debug.Log("[LevelPlay] Initializing SDK...");
+//     private void Start()
+//     {
+//         Debug.Log("[LevelPlay] Initializing SDK...");
 
-        LevelPlay.OnInitSuccess += OnInitSuccess;
-        LevelPlay.OnInitFailed += OnInitFailed;
+//         LevelPlay.OnInitSuccess += OnInitSuccess;
+//         LevelPlay.OnInitFailed += OnInitFailed;
 
-        LevelPlay.SetMetaData("is_test_suite", "enable");
+//         LevelPlay.SetMetaData("is_test_suite", "enable");
 
-        LevelPlay.Init(appKey);
-    }
+//         LevelPlay.Init(appKey);
+//     }
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
+//     private void Awake()
+//     {
+//         DontDestroyOnLoad(gameObject);
+//     }
 
 
-    private void OnInitSuccess(LevelPlayConfiguration configuration)
-    {
-        IsInitialized = true;
+//     private void OnInitSuccess(LevelPlayConfiguration configuration)
+//     {
+//         IsInitialized = true;
 
-        Debug.Log("[LevelPlay] SDK initialized successfully.");
+//         Debug.Log("[LevelPlay] SDK initialized successfully.");
 
-        LevelPlay.SetMetaData("is_test_suite", "enable");
-        LevelPlay.SetMetaData("is_test_suite_live_mode", "false");
+//         LevelPlay.SetMetaData("is_test_suite", "enable");
+//         LevelPlay.SetMetaData("is_test_suite_live_mode", "false");
 
-        if (interstitialAdController != null)
-        {
-            interstitialAdController.InitializeInterstitial();
-            interstitialAdController.LoadInterstitial();
-        }
+//         if (interstitialAdController != null)
+//         {
+//             interstitialAdController.InitializeInterstitial();
+//             interstitialAdController.LoadInterstitial();
+//         }
 
-        LevelPlay.LaunchTestSuite();
-    }
+//         LevelPlay.LaunchTestSuite();
+//     }
 
-    private void OnInitFailed(LevelPlayInitError error)
-    {
-        IsInitialized = false;
-        Debug.LogError("[LevelPlay] SDK initialization failed: " + error);
-    }
+//     private void OnInitFailed(LevelPlayInitError error)
+//     {
+//         IsInitialized = false;
+//         Debug.LogError("[LevelPlay] SDK initialization failed: " + error);
+//     }
 
-    private void OnDestroy()
-    {
-        LevelPlay.OnInitSuccess -= OnInitSuccess;
-        LevelPlay.OnInitFailed -= OnInitFailed;
-    }
-}
+//     private void OnDestroy()
+//     {
+//         LevelPlay.OnInitSuccess -= OnInitSuccess;
+//         LevelPlay.OnInitFailed -= OnInitFailed;
+//     }
+// }
