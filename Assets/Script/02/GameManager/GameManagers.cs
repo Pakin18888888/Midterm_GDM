@@ -29,7 +29,7 @@ public class GameManagers : MonoBehaviour
 
     public bool isRestStage;
     public bool usePolarity = true;
-    [SerializeField] private InterstitialAdController interstitialAdController;
+    // [SerializeField] private InterstitialAdController interstitialAdController;
 
     void Awake()
     {
@@ -190,9 +190,21 @@ public class GameManagers : MonoBehaviour
     public void BackToMenu()
     {
         Time.timeScale = 1f;
-        if (InterstitialAdController.Instance != null)
+        // if (InterstitialAdController.Instance != null)
+        // {
+        //     InterstitialAdController.Instance.ShowInterstitial(() =>
+        //     {
+        //         SceneManager.LoadScene("MainMenuScene");
+        //     });
+        // }
+        // else
+        // {
+        //     SceneManager.LoadScene("MainMenuScene");
+        // }
+
+        if (UnityAdsManager.Instance != null)
         {
-            InterstitialAdController.Instance.ShowInterstitial(() =>
+            UnityAdsManager.Instance.ShowAd(() =>
             {
                 SceneManager.LoadScene("MainMenuScene");
             });
@@ -201,6 +213,7 @@ public class GameManagers : MonoBehaviour
         {
             SceneManager.LoadScene("MainMenuScene");
         }
+
     }
 
     void UpdateStageMode()

@@ -206,6 +206,7 @@ Assets/
   GooglePlay/
    InterstitialAdController.cs
    LevelPlayInitializer.cs
+   UnityAdsManager.cs
   Item/
    CoinLineSpawner.cs
    ComboEffect.cs
@@ -682,6 +683,8 @@ Library/ScriptAssemblies/
  UnityEditor.UI.Analytics.dll
  UnityEditor.UI.dll
  UnityEditor.XR.LegacyInputHelpers.dll
+ UnityEngine.Advertisements.dll
+ UnityEngine.Advertisements.Editor.dll
  UnityEngine.SpatialTracking.dll
  UnityEngine.UI.dll
  UnityEngine.XR.LegacyInputHelpers.dll
