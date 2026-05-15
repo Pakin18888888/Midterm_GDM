@@ -18,7 +18,8 @@ public class LevelPlayInitializer : MonoBehaviour
         LevelPlay.Init(appKey);
     }
 
-    private void Awake() {
+    private void Awake()
+    {
         DontDestroyOnLoad(gameObject);
     }
 
@@ -26,17 +27,19 @@ public class LevelPlayInitializer : MonoBehaviour
     private void OnInitSuccess(LevelPlayConfiguration configuration)
     {
         IsInitialized = true;
+
         Debug.Log("[LevelPlay] SDK initialized successfully.");
+
+        LevelPlay.SetMetaData("is_test_suite", "enable");
 
         LevelPlay.LaunchTestSuite();
 
-        // Create Banner / Interstitial / Rewarded objects after this point
         if (interstitialAdController != null)
         {
             interstitialAdController.InitializeInterstitial();
             interstitialAdController.LoadInterstitial();
         }
-    }
+    }   
 
     private void OnInitFailed(LevelPlayInitError error)
     {
