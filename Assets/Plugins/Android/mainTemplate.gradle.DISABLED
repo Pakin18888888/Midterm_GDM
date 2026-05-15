@@ -30,6 +30,30 @@ android {
 // Android Resolver Exclusions End
 android {
     namespace "com.unity3d.player"
+
+    packaging {
+    resources {
+
+        excludes += [
+            "META-INF/DEPENDENCIES",
+            "META-INF/LICENSE",
+            "META-INF/LICENSE.txt",
+            "META-INF/license.txt",
+            "META-INF/NOTICE",
+            "META-INF/NOTICE.txt",
+            "META-INF/notice.txt",
+            "META-INF/ASL2.0",
+            "META-INF/*.kotlin_module"
+        ]
+
+        pickFirsts += [
+            "**/libc++_shared.so",
+            "**/*.proto",
+            "META-INF/*"
+        ]
+    }
+}
+
     ndkPath "**NDKPATH**"
     ndkVersion "**NDKVERSION**"
 
