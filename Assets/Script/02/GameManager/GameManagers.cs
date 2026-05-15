@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -28,6 +29,7 @@ public class GameManagers : MonoBehaviour
 
     public bool isRestStage;
     public bool usePolarity = true;
+    [SerializeField] private InterstitialAdController interstitialAdController;
 
     void Awake()
     {
@@ -188,8 +190,17 @@ public class GameManagers : MonoBehaviour
     public void BackToMenu()
     {
         Time.timeScale = 1f;
-
-        SceneManager.LoadScene("MainMenuScene");
+        if (interstitialAdController != null)
+        {
+            interstitialAdController.ShowInterstitial(() =>
+            {
+                SceneManager.LoadScene("MainMenuScene");
+            });
+        }
+        else
+        {
+            SceneManager.LoadScene("MainMenuScene");
+        }
     }
 
     void UpdateStageMode()
