@@ -7,7 +7,7 @@ public class UnityAdsManager : MonoBehaviour,
     IUnityAdsLoadListener,
     IUnityAdsShowListener
 {
-    [SerializeField] private string androidGameId = "6115859";
+    [SerializeField] private string androidGameId = "6115858";
     [SerializeField] private string interstitialAdId = "Interstitial_Android";
     [SerializeField] private bool testMode = true;
     private Action onAdClosed;
