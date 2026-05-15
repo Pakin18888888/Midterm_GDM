@@ -32,13 +32,16 @@ public class LevelPlayInitializer : MonoBehaviour
 
         Debug.Log("[LevelPlay] SDK initialized successfully.");
 
-        LevelPlay.LaunchTestSuite();
+        LevelPlay.SetMetaData("is_test_suite", "enable");
+        LevelPlay.SetMetaData("is_test_suite_live_mode", "false");
 
         if (interstitialAdController != null)
         {
             interstitialAdController.InitializeInterstitial();
             interstitialAdController.LoadInterstitial();
         }
+
+        LevelPlay.LaunchTestSuite();
     }
 
     private void OnInitFailed(LevelPlayInitError error)

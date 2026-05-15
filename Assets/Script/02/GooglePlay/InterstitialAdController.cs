@@ -18,7 +18,7 @@ public class InterstitialAdController : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
     }
-    [SerializeField] private string interstitialAdUnitId = "YOUR_INTERSTITIAL_AD_UNIT_ID";
+    [SerializeField] private string interstitialAdUnitId = "smjp2fyczvdprtbi";
 
     private LevelPlayInterstitialAd interstitialAd;
     private bool isReady;
